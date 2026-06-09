@@ -1,25 +1,25 @@
 // ============================================================
-// Soonr Lava / Bokeh Background
+// BokehLavaGradient — animated bokeh / lava gradient background
 //
 // 여러 색·크기의 블롭이 천천히 떠다니며 부드럽게 섞이는 보케 배경.
+// 각 블롭은 자기 색의 soft radial-gradient 원, 전체에 Gaussian 블러 → 보케.
 //
-// 각 블롭은 자기 색을 가진 soft radial-gradient 원으로 그리고, 전체에
-// Gaussian 블러를 입혀 보케화한다. (메타볼처럼 합쳐지지 않으므로 모든
-// 색이 그대로 보인다.)
+// 성능 최적화(외관은 거의 동일):
+//   1) 저해상도 블러 — 블롭을 lowResFactor 배 버퍼에 그려 블러 후 업스케일.
+//      블러 비용 ∝ 픽셀 수 → factor² 만큼 절감. 결과는 어차피 흐려서 차이 미미.
+//   2) fps throttle — targetFps 로 제한(시간 기반 dt 라 속도는 유지).
+//   3) 안 보일 때 정지 — Ticker(TickerMode)로 화면이 덮이면 자동 멈춤,
+//      앱이 백그라운드로 가면 정지.
 //
 // 블롭의 바운싱 모션 아이디어는 lava_lamp_effect (MIT, © yashas-hm,
 // https://github.com/yashas-hm/lava-lamp-effect) 의 Goblets 를 참고.
-//
-// 사용 예:
-//   BokehLavaGradient(child: ...)
 // ============================================================
 
 import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-
-// ---- 위젯 --------------------------------------------------------------
+import 'package:flutter/scheduler.dart';
 
 class BokehLavaGradient extends StatefulWidget {
   /// 블롭 뒤를 채우는 베이스 색.
@@ -44,14 +44,18 @@ class BokehLavaGradient extends StatefulWidget {
   final double minBlobRadius;
   final double maxBlobRadius;
 
-  final Duration repeatDuration;
+  /// [성능] 블러 버퍼 해상도 배율(0~1). 낮을수록 가볍고, 0.45 정도면
+  /// 흐린 결과라 육안 차이가 거의 없다.
+  final double lowResFactor;
+
+  /// [성능] 목표 프레임레이트. 드리프트가 느려 30 정도면 충분.
+  final int targetFps;
+
   final Widget? child;
 
   const BokehLavaGradient({
     super.key,
-    // 살짝 밝은 번트 오렌지 베이스
     this.baseColor = const Color(0xFFC65318),
-    // 대비 큰 오렌지 그라데이션 (크림→골든→앰버→오렌지→딥)
     this.colors = const <Color>[
       Color(0xFFFFE6B8), // 페일 크림
       Color(0xFFFFD089), // 골든
@@ -69,7 +73,8 @@ class BokehLavaGradient extends StatefulWidget {
     this.blobOpacity = 0.85,
     this.minBlobRadius = 0.30,
     this.maxBlobRadius = 1.0,
-    this.repeatDuration = const Duration(seconds: 14),
+    this.lowResFactor = 0.45,
+    this.targetFps = 30,
     this.child,
   });
 
@@ -78,17 +83,30 @@ class BokehLavaGradient extends StatefulWidget {
 }
 
 class _BokehLavaGradientState extends State<BokehLavaGradient>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _ctr;
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  late final Ticker _ticker;
   late _BlobField _field;
+  final ValueNotifier<int> _repaint = ValueNotifier<int>(0);
+  Duration _last = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-    _field = _BlobField(
-        widget.blobCount, widget.speed, widget.minBlobRadius, widget.maxBlobRadius);
-    _ctr = AnimationController(vsync: this, duration: widget.repeatDuration)
-      ..repeat();
+    _field = _BlobField(widget.blobCount, widget.speed, widget.minBlobRadius,
+        widget.maxBlobRadius);
+    WidgetsBinding.instance.addObserver(this);
+    _ticker = createTicker(_onTick)..start();
+  }
+
+  void _onTick(Duration elapsed) {
+    // targetFps 로 제한: 간격이 안 찼으면 스킵.
+    final intervalUs = 1000000 / widget.targetFps;
+    final dtUs = (elapsed - _last).inMicroseconds;
+    if (_last != Duration.zero && dtUs < intervalUs) return;
+    final dt = _last == Duration.zero ? 1 / widget.targetFps : dtUs / 1000000.0;
+    _last = elapsed;
+    _field.tick(dt);
+    _repaint.value++; // CustomPaint(repaint:) 만 다시 그림 → setState 없음
   }
 
   @override
@@ -101,14 +119,25 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
       _field = _BlobField(widget.blobCount, widget.speed, widget.minBlobRadius,
           widget.maxBlobRadius);
     }
-    if (widget.repeatDuration != old.repeatDuration) {
-      _ctr.duration = widget.repeatDuration;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // 백그라운드/비활성에서는 정지(배터리·GPU 절약).
+    final active = state == AppLifecycleState.resumed;
+    if (active && !_ticker.isActive) {
+      _last = Duration.zero;
+      _ticker.start();
+    } else if (!active && _ticker.isActive) {
+      _ticker.stop();
     }
   }
 
   @override
   void dispose() {
-    _ctr.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    _ticker.dispose();
+    _repaint.dispose();
     super.dispose();
   }
 
@@ -116,37 +145,48 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final sigma =
-            max(0.1, constraints.biggest.shortestSide * widget.blurStrength);
+        final w = constraints.maxWidth.isFinite ? constraints.maxWidth : 0.0;
+        final h = constraints.maxHeight.isFinite ? constraints.maxHeight : 0.0;
+        final f = widget.lowResFactor.clamp(0.1, 1.0);
+        final lowW = max(1.0, w * f);
+        final lowH = max(1.0, h * f);
+        // 블러는 저해상도 버퍼에서. 업스케일(1/f) 후 풀해상도 sigma 와 동일.
+        final sigma = max(0.1, min(lowW, lowH) * widget.blurStrength);
 
-        // 블롭에 알파를 입혀, 겹친 블롭끼리 색이 섞이게 한다.
         final paintColors = <Color>[
           for (final c in widget.colors)
             c.withValues(alpha: widget.blobOpacity),
         ];
-
-        final blobs = RepaintBoundary(
-          child: AnimatedBuilder(
-            animation: _ctr,
-            builder: (context, _) => CustomPaint(
-              size: Size.infinite,
-              painter: _BlobPainter(_field, paintColors),
-            ),
-          ),
-        );
 
         return Stack(
           fit: StackFit.expand,
           children: <Widget>[
             ColoredBox(color: widget.baseColor),
             ClipRect(
-              child: ImageFiltered(
-                imageFilter: ui.ImageFilter.blur(
-                  sigmaX: sigma,
-                  sigmaY: sigma,
-                  tileMode: TileMode.decal,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Transform.scale(
+                  scale: 1 / f,
+                  alignment: Alignment.topLeft,
+                  filterQuality: FilterQuality.low, // 부드러운 업스케일
+                  child: SizedBox(
+                    width: lowW,
+                    height: lowH,
+                    child: RepaintBoundary(
+                      child: ImageFiltered(
+                        imageFilter: ui.ImageFilter.blur(
+                          sigmaX: sigma,
+                          sigmaY: sigma,
+                          tileMode: TileMode.decal,
+                        ),
+                        child: CustomPaint(
+                          painter: _BlobPainter(_field, paintColors, _repaint),
+                          child: const SizedBox.expand(),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                child: blobs,
               ),
             ),
             if (widget.child != null) widget.child!,
@@ -161,18 +201,17 @@ class _BlobPainter extends CustomPainter {
   final _BlobField field;
   final List<Color> colors;
 
-  _BlobPainter(this.field, this.colors);
+  _BlobPainter(this.field, this.colors, Listenable repaint)
+      : super(repaint: repaint);
 
   @override
   void paint(Canvas canvas, Size size) {
-    field.ensureSize(size);
-    field.tick(size);
+    field.ensureSize(size); // 저해상도 버퍼 크기에서 동작
 
     for (int i = 0; i < field.blobs.length; i++) {
       final b = field.blobs[i];
       final c = colors[i % colors.length];
       final center = Offset(b.x, b.y);
-      // 코어는 색이 꽉 차고 가장자리로 부드럽게 사라지는 원(보케).
       final shader = RadialGradient(
         colors: <Color>[c, c, c.withValues(alpha: 0)],
         stops: const <double>[0.0, 0.45, 1.0],
@@ -181,15 +220,17 @@ class _BlobPainter extends CustomPainter {
     }
   }
 
+  // repaint(Listenable)로만 다시 그린다.
   @override
-  bool shouldRepaint(_BlobPainter oldDelegate) => true;
+  bool shouldRepaint(_BlobPainter old) =>
+      !identical(old.field, field) || !identical(old.colors, colors);
 }
 
 // ---- 떠다니는 블롭 필드 -------------------------------------------------
 
 class _Blob {
   double x, y; // 중심
-  double vx, vy; // 속도
+  double vx, vy; // 속도 (px/초)
   double r; // 반경
   _Blob(this.x, this.y, this.vx, this.vy, this.r);
 }
@@ -213,9 +254,12 @@ class _BlobField {
     blobs.clear();
     for (int i = 0; i < count; i++) {
       final r = shortest * (minR + (maxR - minR) * _rand.nextDouble());
+      // 속도는 짧은 변 비율/초 → 해상도(저해상도 버퍼)와 무관하게 같은 체감.
       double v() => (_rand.nextBool() ? 1 : -1) *
           (0.3 + 0.9 * _rand.nextDouble()) *
-          speed;
+          speed *
+          shortest *
+          0.06;
       blobs.add(_Blob(
         _rand.nextDouble() * size.width,
         _rand.nextDouble() * size.height,
@@ -226,13 +270,14 @@ class _BlobField {
     }
   }
 
-  /// 매 프레임 블롭을 이동시키고, 벽에 닿으면 반사. 중심이 화면 밖으로
-  /// 조금 나가도 되게 둬서(반경만큼 여유) 가장자리에서도 색이 차게 한다.
-  void tick(Size bounds) {
+  /// dt(초)만큼 이동, 벽 반사. 중심이 반경 일부만큼 밖으로 나가도 허용.
+  void tick(double dt) {
+    if (blobs.isEmpty) return;
+    final bounds = size;
     for (final b in blobs) {
-      b.x += b.vx;
-      b.y += b.vy;
-      final mx = b.r * 0.4; // 허용 여백(중심이 살짝 밖으로)
+      b.x += b.vx * dt;
+      b.y += b.vy * dt;
+      final mx = b.r * 0.4;
       if (b.x < -mx) {
         b.x = -mx;
         b.vx = -b.vx;
