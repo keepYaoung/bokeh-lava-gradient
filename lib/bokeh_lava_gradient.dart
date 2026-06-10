@@ -77,7 +77,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   // light2 — 밝은 크림 바탕(light1 베이스) + 세이지/올리브/테라코타 + 크림
   // 베이스가 거의 흰색이라 opacity 를 높여 블롭이 워시아웃되지 않게.
   BokehTheme.light2: _BokehPreset(
-    Color(0xFFFFF1E2),
+    Color(0xFFFFF8EE),
     <Color>[
       Color(0xFF5E8863),
       Color(0xFFAE5C34),
