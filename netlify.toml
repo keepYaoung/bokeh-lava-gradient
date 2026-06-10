@@ -1,0 +1,11 @@
+# Netlify config — branch deploy previews for the Flutter web demo.
+# Connect this repo in Netlify (set the production/branch to 260610-bg-only,
+# or enable branch deploys) and every push gets a live preview URL.
+
+[build]
+  command = "bash ./netlify-build.sh"
+  publish = "build/web"
+
+[build.environment]
+  # avoid Netlify's default Node detection getting in the way
+  NETLIFY_USE_YARN = "false"
