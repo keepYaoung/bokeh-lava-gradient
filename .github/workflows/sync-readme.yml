@@ -1,0 +1,42 @@
+name: Sync README presets
+
+# Whenever the presets (or the generator) change, regenerate the README table
+# from the ACTIVE (non-commented) presets and commit it back.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lib/bokeh_lava_gradient.dart'
+      - 'tool/update_readme.dart'
+      - 'README.md'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+
+      - name: Regenerate README preset table
+        run: dart run tool/update_readme.dart
+
+      - name: Commit if README changed
+        run: |
+          if ! git diff --quiet -- README.md; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "chore: sync README presets [skip ci]"
+            git push
+          else
+            echo "README already in sync."
+          fi
