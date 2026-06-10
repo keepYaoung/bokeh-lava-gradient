@@ -21,8 +21,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-/// 미리 정의된 배경 테마. 라이트 2 + 다크 2.
-enum BokehTheme { light1, light2, dark1, dark2 }
+/// 미리 정의된 배경 테마. 원본(og) + 라이트 2 + 다크 2.
+enum BokehTheme { og, light1, light2, dark1, dark2 }
 
 class _BokehPreset {
   final Color base;
@@ -33,6 +33,23 @@ class _BokehPreset {
 }
 
 const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
+  // og — 원본 기본값 (밝은 번트 바탕 + 오렌지 그라데이션 9색)
+  BokehTheme.og: _BokehPreset(
+    Color(0xFFC65318),
+    <Color>[
+      Color(0xFFFFE6B8),
+      Color(0xFFFFD089),
+      Color(0xFFFFB85C),
+      Color(0xFFFF9A43),
+      Color(0xFFFC7C2C),
+      Color(0xFFF26019),
+      Color(0xFFD94E10),
+      Color(0xFFFFCBA0),
+      Color(0xFF932D00),
+    ],
+    0.85,
+    Brightness.dark,
+  ),
   // light1 — 밝은 크림 바탕 + 소프트 파스텔 피치/살구 (화사·가벼움)
   BokehTheme.light1: _BokehPreset(
     Color(0xFFFFF1E2),
