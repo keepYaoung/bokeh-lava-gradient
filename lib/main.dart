@@ -37,7 +37,7 @@ const _captions = <BokehTheme, String>{
   BokehTheme.light2: 'warm beige · muted orange & rose',
   BokehTheme.dark1: 'deep burnt orange · glowing amber',
   BokehTheme.dark2: 'near-black · strong orange glow',
-  BokehTheme.dark3: 'black · teal & green glow',
+  BokehTheme.dark3: 'black · teal/green + orange glow',
 };
 
 class DemoScreen extends StatefulWidget {
