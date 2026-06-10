@@ -23,6 +23,7 @@ class DemoApp extends StatelessWidget {
 }
 
 const _labels = <BokehTheme, String>{
+  BokehTheme.og: 'OG',
   BokehTheme.light1: 'Light 1',
   BokehTheme.light2: 'Light 2',
   BokehTheme.dark1: 'Dark 1',
@@ -30,6 +31,7 @@ const _labels = <BokehTheme, String>{
 };
 
 const _captions = <BokehTheme, String>{
+  BokehTheme.og: 'original · burnt orange + 9-color gradient',
   BokehTheme.light1: 'bright cream · soft pastel peach blobs',
   BokehTheme.light2: 'warm beige · muted orange & rose',
   BokehTheme.dark1: 'deep burnt orange · glowing amber',
@@ -44,7 +46,7 @@ class DemoScreen extends StatefulWidget {
 }
 
 class _DemoScreenState extends State<DemoScreen> {
-  BokehTheme _theme = BokehTheme.dark1;
+  BokehTheme _theme = BokehTheme.og;
 
   @override
   Widget build(BuildContext context) {
@@ -115,17 +117,21 @@ class _ThemeToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final light = onColor != Colors.white;
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: (light ? Colors.white : Colors.black).withValues(alpha: 0.22),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final t in BokehTheme.values) _tab(t),
-        ],
+    // 탭 5개라 좁은 화면에서 넘치지 않게 가로 스크롤.
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: (light ? Colors.white : Colors.black).withValues(alpha: 0.22),
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final t in BokehTheme.values) _tab(t),
+          ],
+        ),
       ),
     );
   }
