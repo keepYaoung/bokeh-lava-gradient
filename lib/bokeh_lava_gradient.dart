@@ -88,7 +88,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
       Color(0xFF1C1F16),
       Color(0xFFAE5C34),
       Color(0xFF9BBF8E),
-      Color(0xFFF7E0B6),
+      Color(0xFFFFF4D8), // 베이스보다 밝은 크림 하이라이트
     ],
     0.6,
     Brightness.light,
