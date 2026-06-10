@@ -39,7 +39,7 @@ All 7 presets (✅ = active in the demo; 💤 = commented out in code, none righ
 |--------|:------:|------|-------------|---------|
 | `og` | ✅ | `#C65318` | `#FFE6B8` `#FFD089` `#FFB85C` `#FF9A43` `#FC7C2C` `#F26019` `#D94E10` `#FFCBA0` `#932D00` | 0.85 |
 | `light1` | ✅ | `#FFF1E2` | `#FFE0C8` `#FFD3B0` `#FFC9A8` `#FFE6D6` `#FAD4B8` `#FFBE99` `#FFEAD2` | 0.60 |
-| `light2` | ✅ | `#FFF8EE` | `#5E8863` `#AE5C34` `#9BBF8E` `#FFF4D8` | 0.80 |
+| `light2` | ✅ | `#FFF8EE` | `#9BBF8E` `#AE5C34` `#ECF2E5` `#FFF4D8` | 0.80 |
 | `light3` | ✅ | `#F7E0B6` | `#5E8863` `#1C1F16` `#AE5C34` `#9BBF8E` `#FFF4D8` | 0.60 |
 | `dark1` | ✅ | `#8F2C00` | `#FFE6B8` `#FFD089` `#FFB85C` `#FF9A43` `#FC7C2C` `#F26019` `#D94E10` `#FFCBA0` `#932D00` | 0.85 |
 | `dark2` | ✅ | `#160B04` | `#FF8A2A` `#FF6A14` `#FFB152` `#FFC97A` `#E2530E` `#7A2600` `#FFD089` | 0.90 |
