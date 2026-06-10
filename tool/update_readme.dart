@@ -82,9 +82,9 @@ void main() {
   final updated = readme.replaceAll(block, replacement);
 
   if (updated == readme) {
-    stdout.writeln('README already up to date (${rows.length} active presets).');
+    stdout.writeln('README already up to date (${rows.length} presets).');
     return;
   }
   readmeFile.writeAsStringSync(updated);
-  stdout.writeln('README presets updated (${rows.length} active).');
+  stdout.writeln('README presets updated (${rows.length} presets).');
 }
