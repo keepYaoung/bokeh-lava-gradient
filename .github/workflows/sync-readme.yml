@@ -4,6 +4,7 @@ name: Sync README presets
 # from the ACTIVE (non-commented) presets and commit it back.
 
 on:
+  workflow_dispatch: {}
   push:
     branches: [main]
     paths:
