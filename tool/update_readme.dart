@@ -1,8 +1,6 @@
-// Regenerates the preset table in README.md from the ACTIVE (non-commented)
-// presets in lib/bokeh_lava_gradient.dart.
-//
-// Block-commented presets (wrapped in /* ... */) are ignored, so only the
-// presets that actually ship show up in the docs.
+// Regenerates the preset table in README.md from ALL presets in
+// lib/bokeh_lava_gradient.dart, marking which ones are active vs.
+// commented-out (wrapped in /* ... */, so not shipped in the demo).
 //
 //   dart run tool/update_readme.dart
 //
@@ -19,10 +17,15 @@ void main() {
     exit(1);
   }
 
-  // Drop block comments so /* ...commented preset... */ entries are excluded.
-  final src = srcFile
-      .readAsStringSync()
-      .replaceAll(RegExp(r'/\*.*?\*/', dotAll: true), '');
+  final src = srcFile.readAsStringSync();
+
+  // Ranges of /* ... */ block comments → used to tell active from commented.
+  final blockRanges = RegExp(r'/\*.*?\*/', dotAll: true)
+      .allMatches(src)
+      .map((m) => [m.start, m.end])
+      .toList();
+  bool isCommented(int idx) =>
+      blockRanges.any((r) => idx >= r[0] && idx < r[1]);
 
   final entry = RegExp(
     r'BokehTheme\.(\w+):\s*_BokehPreset\(\s*'
@@ -38,23 +41,25 @@ void main() {
   final rows = <String>[];
   for (final m in entry.allMatches(src)) {
     final name = m.group(1)!;
+    final active = !isCommented(m.start);
+    final status = active ? '✅' : '💤';
     final base = h6(m.group(2)!);
     final colors = hex
         .allMatches(m.group(3)!)
         .map((c) => '`${h6(c.group(1)!)}`')
         .join(' ');
     final opacity = double.parse(m.group(4)!).toStringAsFixed(2);
-    rows.add('| `$name` | `$base` | $colors | $opacity |');
+    rows.add('| `$name` | $status | `$base` | $colors | $opacity |');
   }
 
   if (rows.isEmpty) {
-    stderr.writeln('error: no active presets found in _kPresets.');
+    stderr.writeln('error: no presets found in _kPresets.');
     exit(1);
   }
 
   final table = StringBuffer()
-    ..writeln('| Preset | Base | Blob colors | Opacity |')
-    ..writeln('|--------|------|-------------|---------|')
+    ..writeln('| Preset | Active | Base | Blob colors | Opacity |')
+    ..writeln('|--------|:------:|------|-------------|---------|')
     ..write(rows.join('\n'));
 
   const startTag = '<!-- PRESETS:START -->';
