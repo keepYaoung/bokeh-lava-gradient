@@ -28,6 +28,7 @@ const _labels = <BokehTheme, String>{
   BokehTheme.light2: 'Light 2',
   BokehTheme.dark1: 'Dark 1',
   BokehTheme.dark2: 'Dark 2',
+  BokehTheme.dark3: 'Dark 3',
 };
 
 const _captions = <BokehTheme, String>{
@@ -36,6 +37,7 @@ const _captions = <BokehTheme, String>{
   BokehTheme.light2: 'warm beige · muted orange & rose',
   BokehTheme.dark1: 'deep burnt orange · glowing amber',
   BokehTheme.dark2: 'near-black · strong orange glow',
+  BokehTheme.dark3: 'black · teal & green glow',
 };
 
 class DemoScreen extends StatefulWidget {
