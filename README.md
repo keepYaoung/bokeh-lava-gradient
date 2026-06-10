@@ -11,13 +11,28 @@ size and motion knob is a parameter.
 
 **https://self-made-orange.github.io/bokeh-lava-gradient/**
 
-An interactive build of the demo app. Toggle between:
-
-- **Bokeh Lava** — multi-colored soft blobs of varied size float and blend.
-- **Mesh** — the four Figma frames (`f_01`–`f_04`) cross-fading every 4s.
+An interactive build of the demo app. Toggle between the **four themed
+presets** — `Light 1`, `Light 2`, `Dark 1`, `Dark 2` — and watch the palette
+swap live while the blobs keep drifting.
 
 > First load may take a few seconds (Flutter web bootstrap). Resize the window
 > to see the gradient stays full-bleed at any aspect ratio.
+
+## 🎨 Presets (2 light + 2 dark)
+
+```dart
+BokehLavaGradient.preset(BokehTheme.dark1, child: ...);
+```
+
+| Preset | Look |
+|--------|------|
+| `light1` | bright cream · soft pastel peach/apricot |
+| `light2` | warm beige · muted orange & rose |
+| `dark1`  | deep burnt orange · glowing amber |
+| `dark2`  | near-black · strong orange glow |
+
+`bokehThemeBrightness(theme)` returns the preset's `Brightness` so you can pick
+readable text/icon colors for content on top.
 
 ## ✨ What it does
 

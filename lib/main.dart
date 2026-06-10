@@ -3,12 +3,9 @@
 //   flutter run            (any device)
 //   flutter run -d chrome  (web — same as the live demo)
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import 'bokeh_lava_gradient.dart';
-import 'mesh_gradient.dart';
 
 void main() => runApp(const DemoApp());
 
@@ -25,7 +22,19 @@ class DemoApp extends StatelessWidget {
   }
 }
 
-enum _Mode { lava, mesh }
+const _labels = <BokehTheme, String>{
+  BokehTheme.light1: 'Light 1',
+  BokehTheme.light2: 'Light 2',
+  BokehTheme.dark1: 'Dark 1',
+  BokehTheme.dark2: 'Dark 2',
+};
+
+const _captions = <BokehTheme, String>{
+  BokehTheme.light1: 'bright cream · soft pastel peach blobs',
+  BokehTheme.light2: 'warm beige · muted orange & rose',
+  BokehTheme.dark1: 'deep burnt orange · glowing amber',
+  BokehTheme.dark2: 'near-black · strong orange glow',
+};
 
 class DemoScreen extends StatefulWidget {
   const DemoScreen({super.key});
@@ -35,64 +44,38 @@ class DemoScreen extends StatefulWidget {
 }
 
 class _DemoScreenState extends State<DemoScreen> {
-  _Mode _mode = _Mode.lava;
-
-  // mesh cycling
-  int _meshIndex = 0;
-  Timer? _meshTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    _meshTimer = Timer.periodic(
-      const Duration(milliseconds: 4000),
-      (_) {
-        if (_mode == _Mode.mesh) {
-          setState(() =>
-              _meshIndex = (_meshIndex + 1) % MeshPreset.all.length);
-        }
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _meshTimer?.cancel();
-    super.dispose();
-  }
+  BokehTheme _theme = BokehTheme.dark1;
 
   @override
   Widget build(BuildContext context) {
-    final background = _mode == _Mode.lava
-        ? const BokehLavaGradient()
-        : MeshGradient(
-            preset: MeshPreset.all[_meshIndex],
-            crossDuration: const Duration(milliseconds: 3000),
-          );
+    // 배경 밝기에 따라 텍스트 색 대비를 맞춘다.
+    final onColor = bokehThemeBrightness(_theme) == Brightness.light
+        ? const Color(0xFF3A1A0A)
+        : Colors.white;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF932D00),
       body: Stack(
         fit: StackFit.expand,
         children: [
-          background,
+          // preset 만 바꾸면 같은 State 를 유지한 채 팔레트가 바뀐다
+          // (블롭은 계속 떠다니고 색만 전환).
+          BokehLavaGradient.preset(_theme),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _Segmented(
-                    mode: _mode,
-                    onChanged: (m) => setState(() => _mode = m),
+                  _ThemeToggle(
+                    theme: _theme,
+                    onColor: onColor,
+                    onChanged: (t) => setState(() => _theme = t),
                   ),
                   const Spacer(),
                   Text(
-                    _mode == _Mode.lava
-                        ? 'bokeh lava'
-                        : 'mesh gradient · ${MeshPreset.all[_meshIndex].name}',
-                    style: const TextStyle(
-                      color: Colors.white,
+                    _labels[_theme]!,
+                    style: TextStyle(
+                      color: onColor,
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.2,
@@ -100,11 +83,9 @@ class _DemoScreenState extends State<DemoScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _mode == _Mode.lava
-                        ? 'soft colored blobs drifting + Gaussian blur'
-                        : 'Figma frames f_01–f_04, cross-fading',
+                    _captions[_theme]!,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.82),
+                      color: onColor.withValues(alpha: 0.8),
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -120,47 +101,54 @@ class _DemoScreenState extends State<DemoScreen> {
   }
 }
 
-class _Segmented extends StatelessWidget {
-  final _Mode mode;
-  final ValueChanged<_Mode> onChanged;
+class _ThemeToggle extends StatelessWidget {
+  final BokehTheme theme;
+  final Color onColor;
+  final ValueChanged<BokehTheme> onChanged;
 
-  const _Segmented({required this.mode, required this.onChanged});
+  const _ThemeToggle({
+    required this.theme,
+    required this.onColor,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final light = onColor != Colors.white;
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.22),
+        color: (light ? Colors.white : Colors.black).withValues(alpha: 0.22),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _tab('Bokeh Lava', _Mode.lava),
-          _tab('Mesh', _Mode.mesh),
+          for (final t in BokehTheme.values) _tab(t),
         ],
       ),
     );
   }
 
-  Widget _tab(String label, _Mode m) {
-    final selected = mode == m;
+  Widget _tab(BokehTheme t) {
+    final selected = theme == t;
     return GestureDetector(
-      onTap: () => onChanged(m),
+      onTap: () => onChanged(t),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         decoration: BoxDecoration(
-          color: selected ? Colors.white : Colors.transparent,
+          color: selected ? onColor : Colors.transparent,
           borderRadius: BorderRadius.circular(999),
         ),
         child: Text(
-          label,
+          _labels[t]!,
           style: TextStyle(
-            color: selected ? const Color(0xFF932D00) : Colors.white,
+            color: selected
+                ? (onColor == Colors.white ? Colors.black : Colors.white)
+                : onColor,
             fontWeight: FontWeight.w700,
-            fontSize: 13,
+            fontSize: 12,
           ),
         ),
       ),

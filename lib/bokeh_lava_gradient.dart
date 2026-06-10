@@ -21,6 +21,86 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+/// 미리 정의된 배경 테마. 라이트 2 + 다크 2.
+enum BokehTheme { light1, light2, dark1, dark2 }
+
+class _BokehPreset {
+  final Color base;
+  final List<Color> colors;
+  final double opacity;
+  final Brightness brightness; // 위에 올릴 콘텐츠/텍스트 대비용
+  const _BokehPreset(this.base, this.colors, this.opacity, this.brightness);
+}
+
+const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
+  // light1 — 밝은 크림 바탕 + 소프트 파스텔 피치/살구 (화사·가벼움)
+  BokehTheme.light1: _BokehPreset(
+    Color(0xFFFFF1E2),
+    <Color>[
+      Color(0xFFFFE0C8),
+      Color(0xFFFFD3B0),
+      Color(0xFFFFC9A8),
+      Color(0xFFFFE6D6),
+      Color(0xFFFAD4B8),
+      Color(0xFFFFBE99),
+      Color(0xFFFFEAD2),
+    ],
+    0.6,
+    Brightness.light,
+  ),
+  // light2 — 웜 베이지/그레이 바탕 + 뮤트 오렌지·로즈 (차분·웜뉴트럴)
+  BokehTheme.light2: _BokehPreset(
+    Color(0xFFEFE6DB),
+    <Color>[
+      Color(0xFFE6C7AE),
+      Color(0xFFDCB49E),
+      Color(0xFFD3A892),
+      Color(0xFFE8CBB8),
+      Color(0xFFD8A88C),
+      Color(0xFFCFA0A0),
+      Color(0xFFE2BBA0),
+    ],
+    0.55,
+    Brightness.light,
+  ),
+  // dark1 — 딥 번트 바탕 + 글로우 오렌지/앰버 (현재 기본과 ≈)
+  BokehTheme.dark1: _BokehPreset(
+    Color(0xFF8F2C00),
+    <Color>[
+      Color(0xFFFFE6B8),
+      Color(0xFFFFD089),
+      Color(0xFFFFB85C),
+      Color(0xFFFF9A43),
+      Color(0xFFFC7C2C),
+      Color(0xFFF26019),
+      Color(0xFFD94E10),
+      Color(0xFFFFCBA0),
+      Color(0xFF932D00),
+    ],
+    0.85,
+    Brightness.dark,
+  ),
+  // dark2 — 거의 블랙 바탕 + 강한 오렌지 글로우 (드라마틱·하이콘트라스트)
+  BokehTheme.dark2: _BokehPreset(
+    Color(0xFF160B04),
+    <Color>[
+      Color(0xFFFF8A2A),
+      Color(0xFFFF6A14),
+      Color(0xFFFFB152),
+      Color(0xFFFFC97A),
+      Color(0xFFE2530E),
+      Color(0xFF7A2600),
+      Color(0xFFFFD089),
+    ],
+    0.9,
+    Brightness.dark,
+  ),
+};
+
+/// 프리셋의 밝기(위에 올릴 텍스트/아이콘 색 대비에 사용).
+Brightness bokehThemeBrightness(BokehTheme theme) =>
+    _kPresets[theme]!.brightness;
+
 class BokehLavaGradient extends StatefulWidget {
   /// 블롭 뒤를 채우는 베이스 색.
   final Color baseColor;
@@ -77,6 +157,37 @@ class BokehLavaGradient extends StatefulWidget {
     this.targetFps = 30,
     this.child,
   });
+
+  /// 미리 정의된 라이트/다크 테마로 생성. (baseColor·colors·blobOpacity 세팅)
+  /// 나머지 노브는 기본값이며 필요시 개별 인자로 덮어쓸 수 있다.
+  factory BokehLavaGradient.preset(
+    BokehTheme theme, {
+    Key? key,
+    int? blobCount,
+    double? speed,
+    double? blurStrength,
+    double? minBlobRadius,
+    double? maxBlobRadius,
+    double? lowResFactor,
+    int? targetFps,
+    Widget? child,
+  }) {
+    final p = _kPresets[theme]!;
+    return BokehLavaGradient(
+      key: key,
+      baseColor: p.base,
+      colors: p.colors,
+      blobOpacity: p.opacity,
+      blobCount: blobCount ?? 12,
+      speed: speed ?? 0.6,
+      blurStrength: blurStrength ?? 0.05,
+      minBlobRadius: minBlobRadius ?? 0.30,
+      maxBlobRadius: maxBlobRadius ?? 1.0,
+      lowResFactor: lowResFactor ?? 0.45,
+      targetFps: targetFps ?? 30,
+      child: child,
+    );
+  }
 
   @override
   State<BokehLavaGradient> createState() => _BokehLavaGradientState();
