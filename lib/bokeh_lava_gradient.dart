@@ -80,7 +80,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.55,
     Brightness.light,
   ),
-  // light3 — 웜 크림 바탕 + 세이지/올리브/테라코타 어스톤
+  // light3 — 웜 크림 바탕 + 세이지/올리브/테라코타 어스톤 (+ 크림 하이라이트)
   BokehTheme.light3: _BokehPreset(
     Color(0xFFF7E0B6),
     <Color>[
@@ -88,6 +88,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
       Color(0xFF1C1F16),
       Color(0xFFAE5C34),
       Color(0xFF9BBF8E),
+      Color(0xFFF7E0B6),
     ],
     0.6,
     Brightness.light,
