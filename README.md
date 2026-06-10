@@ -11,25 +11,30 @@ size and motion knob is a parameter.
 
 **https://keepyaoung.github.io/bokeh-lava-gradient/**
 
-An interactive build of the demo app. Toggle between the **four themed
-presets** — `Light 1`, `Light 2`, `Dark 1`, `Dark 2` — and watch the palette
-swap live while the blobs keep drifting.
+An interactive build of the demo app. Toggle between the **active presets** —
+`OG`, `Light 2`, `Dark 3` — and watch the palette swap live while the blobs
+keep drifting.
 
 > First load may take a few seconds (Flutter web bootstrap). Resize the window
 > to see the gradient stays full-bleed at any aspect ratio.
 
-## 🎨 Presets (2 light + 2 dark)
+## 🎨 Presets
 
 ```dart
-BokehLavaGradient.preset(BokehTheme.dark1, child: ...);
+BokehLavaGradient.preset(BokehTheme.dark3, child: ...);
 ```
 
-| Preset | Look |
-|--------|------|
-| `light1` | bright cream · soft pastel peach/apricot |
-| `light2` | warm beige · muted orange & rose |
-| `dark1`  | deep burnt orange · glowing amber |
-| `dark2`  | near-black · strong orange glow |
+Currently active (the ones the demo deploys):
+
+| Preset | Base | Blob colors | Opacity |
+|--------|------|-------------|---------|
+| `og`     | `#C65318` | `#FFE6B8` `#FFD089` `#FFB85C` `#FF9A43` `#FC7C2C` `#F26019` `#D94E10` `#FFCBA0` `#932D00` | 0.85 |
+| `light2` | `#FFF8EE` | `#5E8863` `#AE5C34` `#9BBF8E` `#FFF4D8` | 0.80 |
+| `dark3`  | `#000000` | `#09353C` `#64AA74` `#034753` `#C15B2E` `#B14415` | 0.72 |
+
+A few more presets (`light1`, `light3`, `dark1`, `dark2`) live **commented out**
+in [`lib/bokeh_lava_gradient.dart`](lib/bokeh_lava_gradient.dart) — uncomment
+their enum value + `_kPresets` entry to bring them back.
 
 `bokehThemeBrightness(theme)` returns the preset's `Brightness` so you can pick
 readable text/icon colors for content on top.
