@@ -21,16 +21,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-/// 미리 정의된 배경 테마. (현재 활성: og, light2, dark3)
-enum BokehTheme {
-  og,
-  // light1,
-  light2,
-  // light3,
-  // dark1,
-  // dark2,
-  dark3,
-}
+/// 미리 정의된 배경 테마. 원본(og) + 라이트 3 + 다크 3.
+enum BokehTheme { og, light1, light2, light3, dark1, dark2, dark3 }
 
 class _BokehPreset {
   final Color base;
@@ -58,7 +50,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.85,
     Brightness.dark,
   ),
-  /* light1 — 밝은 크림 바탕 + 소프트 파스텔 피치/살구 (화사·가벼움)
+  // light1 — 밝은 크림 바탕 + 소프트 파스텔 피치/살구 (화사·가벼움)
   BokehTheme.light1: _BokehPreset(
     Color(0xFFFFF1E2),
     <Color>[
@@ -73,7 +65,6 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.6,
     Brightness.light,
   ),
-  */
   // light2 — 밝은 크림 바탕(light1 베이스) + 세이지/올리브/테라코타 + 크림
   // 베이스가 거의 흰색이라 opacity 를 높여 블롭이 워시아웃되지 않게.
   BokehTheme.light2: _BokehPreset(
@@ -87,7 +78,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.8,
     Brightness.light,
   ),
-  /* light3 — 웜 크림 바탕 + 세이지/올리브/테라코타 어스톤 (+ 크림 하이라이트)
+  // light3 — 웜 크림 바탕 + 세이지/올리브/테라코타 어스톤 (+ 크림 하이라이트)
   BokehTheme.light3: _BokehPreset(
     Color(0xFFF7E0B6),
     <Color>[
@@ -100,8 +91,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.6,
     Brightness.light,
   ),
-  */
-  /* dark1 — 딥 번트 바탕 + 글로우 오렌지/앰버 (현재 기본과 ≈)
+  // dark1 — 딥 번트 바탕 + 글로우 오렌지/앰버 (현재 기본과 ≈)
   BokehTheme.dark1: _BokehPreset(
     Color(0xFF8F2C00),
     <Color>[
@@ -118,8 +108,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.85,
     Brightness.dark,
   ),
-  */
-  /* dark2 — 거의 블랙 바탕 + 강한 오렌지 글로우 (드라마틱·하이콘트라스트)
+  // dark2 — 거의 블랙 바탕 + 강한 오렌지 글로우 (드라마틱·하이콘트라스트)
   BokehTheme.dark2: _BokehPreset(
     Color(0xFF160B04),
     <Color>[
@@ -134,7 +123,6 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.9,
     Brightness.dark,
   ),
-  */
   // dark3 — 블랙 바탕 + 틸/그린 + 오렌지 글로우
   // 오렌지를 리스트 뒤쪽에 둬서 맨 위에 그려지고(occlusion 회피),
   // opacity 를 낮춰 보색(teal)과 칙칙하게 덮이지 않고 섞이게 한다.
