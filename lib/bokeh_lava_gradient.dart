@@ -66,6 +66,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     Brightness.light,
   ),
   // light2 — 밝은 크림 바탕(light1 베이스) + 세이지/올리브/테라코타 + 크림
+  // 베이스가 거의 흰색이라 opacity 를 높여 블롭이 워시아웃되지 않게.
   BokehTheme.light2: _BokehPreset(
     Color(0xFFFFF1E2),
     <Color>[
@@ -75,7 +76,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
       Color(0xFF9BBF8E),
       Color(0xFFFFF4D8),
     ],
-    0.6,
+    0.8,
     Brightness.light,
   ),
   // light3 — 웜 크림 바탕 + 세이지/올리브/테라코타 어스톤 (+ 크림 하이라이트)
