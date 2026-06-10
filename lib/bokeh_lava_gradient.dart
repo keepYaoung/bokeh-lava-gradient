@@ -193,7 +193,7 @@ class BokehLavaGradient extends StatefulWidget {
       Color(0xFF932D00), // 딥 번트
     ],
     this.blobCount = 12,
-    this.speed = 0.6,
+    this.speed = 0.75,
     this.blurStrength = 0.05,
     this.blobOpacity = 0.85,
     this.minBlobRadius = 0.30,
@@ -224,7 +224,7 @@ class BokehLavaGradient extends StatefulWidget {
       colors: p.colors,
       blobOpacity: p.opacity,
       blobCount: blobCount ?? 12,
-      speed: speed ?? 0.6,
+      speed: speed ?? 0.75,
       blurStrength: blurStrength ?? 0.05,
       minBlobRadius: minBlobRadius ?? 0.30,
       maxBlobRadius: maxBlobRadius ?? 1.0,
