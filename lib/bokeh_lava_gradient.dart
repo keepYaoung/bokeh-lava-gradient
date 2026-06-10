@@ -71,7 +71,6 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     Color(0xFFFFF1E2),
     <Color>[
       Color(0xFF5E8863),
-      Color(0xFF1C1F16),
       Color(0xFFAE5C34),
       Color(0xFF9BBF8E),
       Color(0xFFFFF4D8),
