@@ -112,19 +112,21 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.9,
     Brightness.dark,
   ),
-  // dark3 — 블랙 바탕 + 틸/그린 + 오렌지 글로우 (오렌지 비중↑)
+  // dark3 — 블랙 바탕 + 틸/그린 + 오렌지 글로우
+  // 오렌지를 리스트 뒤쪽에 둬서 맨 위에 그려지고(occlusion 회피),
+  // opacity 를 낮춰 보색(teal)과 칙칙하게 덮이지 않고 섞이게 한다.
   BokehTheme.dark3: _BokehPreset(
     Color(0xFF000000),
     <Color>[
       Color(0xFF09353C),
-      Color(0xFFF1723A),
       Color(0xFF64AA74),
-      Color(0xFFDD551A),
       Color(0xFF034753),
       Color(0xFFF1723A),
       Color(0xFFDD551A),
+      Color(0xFFF1723A),
+      Color(0xFFDD551A),
     ],
-    0.9,
+    0.72,
     Brightness.dark,
   ),
 };
