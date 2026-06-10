@@ -9,7 +9,7 @@ size and motion knob is a parameter.
 
 ## ▶️ Live simulation
 
-**https://self-made-orange.github.io/bokeh-lava-gradient/**
+**https://keepyaoung.github.io/bokeh-lava-gradient/**
 
 An interactive build of the demo app. Toggle between the **four themed
 presets** — `Light 1`, `Light 2`, `Dark 1`, `Dark 2` — and watch the palette
