@@ -35,7 +35,7 @@ const _labels = <BokehTheme, String>{
 const _captions = <BokehTheme, String>{
   BokehTheme.og: 'original · burnt orange + 9-color gradient',
   BokehTheme.light1: 'bright cream · soft pastel peach blobs',
-  BokehTheme.light2: 'warm beige · muted orange & rose',
+  BokehTheme.light2: 'bright cream · sage, olive, terracotta + cream',
   BokehTheme.light3: 'warm cream · sage, olive & terracotta',
   BokehTheme.dark1: 'deep burnt orange · glowing amber',
   BokehTheme.dark2: 'near-black · strong orange glow',

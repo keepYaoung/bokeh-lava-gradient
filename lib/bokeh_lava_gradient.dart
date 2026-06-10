@@ -65,19 +65,17 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.6,
     Brightness.light,
   ),
-  // light2 — 웜 베이지/그레이 바탕 + 뮤트 오렌지·로즈 (차분·웜뉴트럴)
+  // light2 — 밝은 크림 바탕(light1 베이스) + 세이지/올리브/테라코타 + 크림
   BokehTheme.light2: _BokehPreset(
-    Color(0xFFEFE6DB),
+    Color(0xFFFFF1E2),
     <Color>[
-      Color(0xFFE6C7AE),
-      Color(0xFFDCB49E),
-      Color(0xFFD3A892),
-      Color(0xFFE8CBB8),
-      Color(0xFFD8A88C),
-      Color(0xFFCFA0A0),
-      Color(0xFFE2BBA0),
+      Color(0xFF5E8863),
+      Color(0xFF1C1F16),
+      Color(0xFFAE5C34),
+      Color(0xFF9BBF8E),
+      Color(0xFFFFF4D8),
     ],
-    0.55,
+    0.6,
     Brightness.light,
   ),
   // light3 — 웜 크림 바탕 + 세이지/올리브/테라코타 어스톤 (+ 크림 하이라이트)
