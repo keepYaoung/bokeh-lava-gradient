@@ -24,21 +24,21 @@ class DemoApp extends StatelessWidget {
 
 const _labels = <BokehTheme, String>{
   BokehTheme.og: 'OG',
-  // BokehTheme.light1: 'Light 1',
+  BokehTheme.light1: 'Light 1',
   BokehTheme.light2: 'Light 2',
-  // BokehTheme.light3: 'Light 3',
-  // BokehTheme.dark1: 'Dark 1',
-  // BokehTheme.dark2: 'Dark 2',
+  BokehTheme.light3: 'Light 3',
+  BokehTheme.dark1: 'Dark 1',
+  BokehTheme.dark2: 'Dark 2',
   BokehTheme.dark3: 'Dark 3',
 };
 
 const _captions = <BokehTheme, String>{
   BokehTheme.og: 'original · burnt orange + 9-color gradient',
-  // BokehTheme.light1: 'bright cream · soft pastel peach blobs',
+  BokehTheme.light1: 'bright cream · soft pastel peach blobs',
   BokehTheme.light2: 'bright cream · sage, terracotta + cream',
-  // BokehTheme.light3: 'warm cream · sage, olive & terracotta',
-  // BokehTheme.dark1: 'deep burnt orange · glowing amber',
-  // BokehTheme.dark2: 'near-black · strong orange glow',
+  BokehTheme.light3: 'warm cream · sage, olive & terracotta',
+  BokehTheme.dark1: 'deep burnt orange · glowing amber',
+  BokehTheme.dark2: 'near-black · strong orange glow',
   BokehTheme.dark3: 'black · teal/green + orange glow',
 };
 
