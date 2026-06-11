@@ -26,7 +26,7 @@ enum BokehTheme {
   og,
   // light1,
   light2,
-  // light3,
+  light3,
   // dark1,
   // dark2,
   dark3,
@@ -105,20 +105,22 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.8,
     Brightness.light,
   ),
-  /* light3 — 웜 크림 바탕 + 세이지/올리브/테라코타 어스톤 (+ 크림 하이라이트)
+  // light3 — dark3 반전: base 검정→흰색, 다크 틸→라이트 틸, 그린/오렌지 유지
   BokehTheme.light3: _BokehPreset(
-    Color(0xFFF7E0B6),
+    Color(0xFFFFFFFF),
     <Color>[
-      Color(0xFF5E8863),
-      Color(0xFF1C1F16),
-      Color(0xFFAE5C34),
-      Color(0xFF9BBF8E),
-      Color(0xFFFFF4D8), // 베이스보다 밝은 크림 하이라이트
+      Color(0xFFC5E4E7), // 라이트 틸 (← #09353C)
+      Color(0xFF64AA74), // 그린 (유지)
+      Color(0xFFBFE0E3), // 라이트 틸 (← #034753)
+      Color(0xFFC15B2E), // 오렌지 (유지)
+      Color(0xFFB14415), // 딥 오렌지 (유지)
+      Color(0xFFC15B2E),
+      Color(0xFFB14415),
     ],
-    0.6,
+    0.8,
     Brightness.light,
   ),
-  // dark1 — 딥 번트 바탕 + 글로우 오렌지/앰버 (현재 기본과 ≈)
+  /* dark1 — 딥 번트 바탕 + 글로우 오렌지/앰버 (현재 기본과 ≈)
   BokehTheme.dark1: _BokehPreset(
     Color(0xFF8F2C00),
     <Color>[
