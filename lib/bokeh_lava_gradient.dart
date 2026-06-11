@@ -44,7 +44,7 @@ class _BokehPreset {
 }
 
 /// dark4 용 세로 마스크: 상단/하단은 검정(#0C0C0C), 60% 지점만 투명해
-/// 그 아래 그라디언트가 비치는 창. (40%→60% 페이드아웃, 60%→80% 페이드인)
+/// 그 아래 그라디언트가 비치는 창. (40%→60% 페이드아웃, 60%→90% 페이드인)
 const Gradient _kVerticalWindowMask = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
@@ -52,10 +52,10 @@ const Gradient _kVerticalWindowMask = LinearGradient(
     Color(0xFF0C0C0C), // 0%  검정
     Color(0xFF0C0C0C), // 40% 검정
     Color(0x000C0C0C), // 60% 투명(그라디언트 노출)
-    Color(0xFF0C0C0C), // 80% 검정
+    Color(0xFF0C0C0C), // 90% 검정
     Color(0xFF0C0C0C), // 100% 검정
   ],
-  stops: <double>[0.0, 0.4, 0.6, 0.8, 1.0],
+  stops: <double>[0.0, 0.4, 0.6, 0.9, 1.0],
 );
 
 const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
