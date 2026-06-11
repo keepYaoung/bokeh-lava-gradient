@@ -98,7 +98,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     Color(0xFFFAFAFA),
     <Color>[
       Color(0xFF9BBF8E), // 라이트 세이지
-      Color(0xFFAE5C34), // 테라코타
+      Color(0xFFC2693E), // 테라코타 (명도 살짝 ↑)
       Color(0xFFECF2E5), // 페일 세이지 (웜 화이트에 가깝게)
       Color(0xFFFFF4D8), // 크림 하이라이트
     ],
