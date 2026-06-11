@@ -20,6 +20,7 @@ void main() {
     BokehTheme.og,
     BokehTheme.light2,
     BokehTheme.dark3,
+    BokehTheme.dark4,
   ];
 
   final outDir = Directory('captures');

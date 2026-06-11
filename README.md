@@ -44,6 +44,7 @@ All 7 presets (✅ = active in this branch's demo; 💤 = commented out in code)
 | `dark1` | 💤 | `#8F2C00` | `#FFE6B8` `#FFD089` `#FFB85C` `#FF9A43` `#FC7C2C` `#F26019` `#D94E10` `#FFCBA0` `#932D00` | 0.85 |
 | `dark2` | 💤 | `#160B04` | `#FF8A2A` `#FF6A14` `#FFB152` `#FFC97A` `#E2530E` `#7A2600` `#FFD089` | 0.90 |
 | `dark3` | ✅ | `#000000` | `#09353C` `#64AA74` `#034753` `#C15B2E` `#B14415` `#C15B2E` `#B14415` | 0.72 |
+| `dark4` | ✅ | `#0C0C0C` | `#09353C` `#64AA74` `#034753` `#C15B2E` `#B14415` `#C15B2E` `#B14415` | 0.72 |
 <!-- PRESETS:END -->
 
 To drop a preset from the demo, comment out its `BokehTheme` enum value +

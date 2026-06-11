@@ -30,6 +30,7 @@ enum BokehTheme {
   // dark1,
   // dark2,
   dark3,
+  dark4,
 }
 
 class _BokehPreset {
@@ -37,8 +38,25 @@ class _BokehPreset {
   final List<Color> colors;
   final double opacity;
   final Brightness brightness; // 위에 올릴 콘텐츠/텍스트 대비용
-  const _BokehPreset(this.base, this.colors, this.opacity, this.brightness);
+  final Gradient? mask; // 그라디언트 위에 덮는 세로 마스크(선택)
+  const _BokehPreset(this.base, this.colors, this.opacity, this.brightness,
+      {this.mask});
 }
+
+/// dark4 용 세로 마스크: 상단/하단은 검정(#0C0C0C), 60% 지점만 투명해
+/// 그 아래 그라디언트가 비치는 창. (40%→60% 페이드아웃, 60%→80% 페이드인)
+const Gradient _kVerticalWindowMask = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: <Color>[
+    Color(0xFF0C0C0C), // 0%  검정
+    Color(0xFF0C0C0C), // 40% 검정
+    Color(0x000C0C0C), // 60% 투명(그라디언트 노출)
+    Color(0xFF0C0C0C), // 80% 검정
+    Color(0xFF0C0C0C), // 100% 검정
+  ],
+  stops: <double>[0.0, 0.4, 0.6, 0.8, 1.0],
+);
 
 const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   // og — 원본 기본값 (밝은 번트 바탕 + 오렌지 그라데이션 9색)
@@ -150,6 +168,22 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.72,
     Brightness.dark,
   ),
+  // dark4 — dark3 그라디언트 그대로 + 세로 윈도우 마스크(상/하단 검정, 중앙 노출)
+  BokehTheme.dark4: _BokehPreset(
+    Color(0xFF0C0C0C),
+    <Color>[
+      Color(0xFF09353C),
+      Color(0xFF64AA74),
+      Color(0xFF034753),
+      Color(0xFFC15B2E),
+      Color(0xFFB14415),
+      Color(0xFFC15B2E),
+      Color(0xFFB14415),
+    ],
+    0.72,
+    Brightness.dark,
+    mask: _kVerticalWindowMask,
+  ),
 };
 
 /// 프리셋의 밝기(위에 올릴 텍스트/아이콘 색 대비에 사용).
@@ -186,6 +220,9 @@ class BokehLavaGradient extends StatefulWidget {
   /// [성능] 목표 프레임레이트. 드리프트가 느려 30 정도면 충분.
   final int targetFps;
 
+  /// 그라디언트 위에 덮는 마스크(선택). 세로 윈도우 등.
+  final Gradient? mask;
+
   final Widget? child;
 
   const BokehLavaGradient({
@@ -210,6 +247,7 @@ class BokehLavaGradient extends StatefulWidget {
     this.maxBlobRadius = 1.0,
     this.lowResFactor = 0.45,
     this.targetFps = 30,
+    this.mask,
     this.child,
   });
 
@@ -240,6 +278,7 @@ class BokehLavaGradient extends StatefulWidget {
       maxBlobRadius: maxBlobRadius ?? 1.0,
       lowResFactor: lowResFactor ?? 0.45,
       targetFps: targetFps ?? 30,
+      mask: p.mask,
       child: child,
     );
   }
@@ -355,6 +394,8 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
                 ),
               ),
             ),
+            if (widget.mask != null)
+              DecoratedBox(decoration: BoxDecoration(gradient: widget.mask)),
             if (widget.child != null) widget.child!,
           ],
         );
