@@ -60,14 +60,14 @@ const Gradient _kVerticalWindowMask = LinearGradient(
 );
 
 /// og-light 용 세로 마스크: 상단(0%)은 투명해 og 그라디언트가 보이고,
-/// 50% 지점부터 하단까지는 흰색(#FDFDFD) 100%. (0%→50% 페이드인)
+/// 50% 지점부터 하단까지는 흰색(#FAFAFA) 100%. (0%→50% 페이드인)
 const Gradient _kOgLightMask = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
   colors: <Color>[
-    Color(0x00FDFDFD), // 0%  투명 (og 노출)
-    Color(0xFFFDFDFD), // 50% 흰색 100%
-    Color(0xFFFDFDFD), // 100% 흰색 100%
+    Color(0x00FAFAFA), // 0%  투명 (og 노출)
+    Color(0xFFFAFAFA), // 50% 흰색 100%
+    Color(0xFFFAFAFA), // 100% 흰색 100%
   ],
   stops: <double>[0.0, 0.5, 1.0],
 );
