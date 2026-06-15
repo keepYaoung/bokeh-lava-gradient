@@ -25,6 +25,7 @@ class DemoApp extends StatelessWidget {
 const _labels = <BokehTheme, String>{
   BokehTheme.og: 'OG',
   BokehTheme.ogLight: 'OG Light',
+  BokehTheme.ogLight2: 'OG Light 2',
   // BokehTheme.light1: 'Light 1',
   BokehTheme.light2: 'Light 2',
   BokehTheme.light3: 'Light 3',
@@ -37,6 +38,7 @@ const _labels = <BokehTheme, String>{
 const _captions = <BokehTheme, String>{
   BokehTheme.og: 'original · burnt orange + 9-color gradient',
   BokehTheme.ogLight: 'og gradient + light mask (orange top → white)',
+  BokehTheme.ogLight2: 'og gradient + light mask (more orange, fade 50→80%)',
   // BokehTheme.light1: 'bright cream · soft pastel peach blobs',
   BokehTheme.light2: 'bright cream · sage, terracotta + cream',
   BokehTheme.light3: 'white · inverted dark3 (light teal + green/orange)',
