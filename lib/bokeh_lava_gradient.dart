@@ -127,15 +127,15 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   BokehTheme.ogLight2: _BokehPreset(
     Color(0xFFC65318),
     <Color>[
-      Color(0xFFFFE6B8),
-      Color(0xFFFFD089),
-      Color(0xFFFFB85C),
-      Color(0xFFFF9A43),
-      Color(0xFFFC7C2C),
-      Color(0xFFF26019),
-      Color(0xFFD94E10),
-      Color(0xFFFFCBA0),
-      Color(0xFF932D00),
+      Color(0xFFFFE6B8), // 페일 크림 (유지)
+      Color(0xFFFFD089), // 골든 (유지)
+      Color(0xFFEFB66C), // 앰버 (채도 80%)
+      Color(0xFFEC9B56), // 라이트 오렌지 (채도 80%)
+      Color(0xFFE78141), // 오렌지 (채도 80%)
+      Color(0xFFDC682F), // 비비드 오렌지 (채도 80%)
+      Color(0xFFC55624), // 딥 오렌지 (채도 80%)
+      Color(0xFFFFCBA0), // 피치 크림 (유지)
+      Color(0xFF84330F), // 딥 번트 (채도 80%)
     ],
     0.85,
     Brightness.light,
