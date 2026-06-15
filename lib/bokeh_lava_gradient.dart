@@ -24,6 +24,7 @@ import 'package:flutter/scheduler.dart';
 /// 미리 정의된 배경 테마. (이 브랜치 활성: og, light2, dark3)
 enum BokehTheme {
   og,
+  ogLight,
   // light1,
   light2,
   light3,
@@ -58,6 +59,19 @@ const Gradient _kVerticalWindowMask = LinearGradient(
   stops: <double>[0.0, 0.4, 0.6, 0.9, 1.0],
 );
 
+/// og-light 용 세로 마스크: 상단(0%)은 투명해 og 그라디언트가 보이고,
+/// 50% 지점부터 하단까지는 흰색(#FDFDFD) 100%. (0%→50% 페이드인)
+const Gradient _kOgLightMask = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: <Color>[
+    Color(0x00FDFDFD), // 0%  투명 (og 노출)
+    Color(0xFFFDFDFD), // 50% 흰색 100%
+    Color(0xFFFDFDFD), // 100% 흰색 100%
+  ],
+  stops: <double>[0.0, 0.5, 1.0],
+);
+
 const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   // og — 원본 기본값 (밝은 번트 바탕 + 오렌지 그라데이션 9색)
   BokehTheme.og: _BokehPreset(
@@ -75,6 +89,24 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     ],
     0.85,
     Brightness.dark,
+  ),
+  // ogLight — og 그라디언트 + 라이트 마스크(상단 오렌지, 50%부터 흰색)
+  BokehTheme.ogLight: _BokehPreset(
+    Color(0xFFC65318),
+    <Color>[
+      Color(0xFFFFE6B8),
+      Color(0xFFFFD089),
+      Color(0xFFFFB85C),
+      Color(0xFFFF9A43),
+      Color(0xFFFC7C2C),
+      Color(0xFFF26019),
+      Color(0xFFD94E10),
+      Color(0xFFFFCBA0),
+      Color(0xFF932D00),
+    ],
+    0.85,
+    Brightness.light, // 하단이 흰색이라 위에 올릴 텍스트는 다크
+    mask: _kOgLightMask,
   ),
   /* light1 — 밝은 크림 바탕 + 소프트 파스텔 피치/살구 (화사·가벼움)
   BokehTheme.light1: _BokehPreset(
