@@ -74,15 +74,15 @@ const Gradient _kOgLightMask = LinearGradient(
 );
 
 /// og-light2 용 세로 마스크: 상단 50%까지 og 노출, 50%→80% 흰색 페이드인,
-/// 80%→100% 흰색(#FAFAFA) 80% opacity. (바닥에서도 og 가 비침)
+/// 80%→100% 흰색(#FAFAFA) 70% opacity. (바닥에서도 og 가 비침)
 const Gradient _kOgLight2Mask = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
   colors: <Color>[
     Color(0x00FAFAFA), // 0%  투명 (og 노출)
     Color(0x00FAFAFA), // 50% 투명 (og 노출)
-    Color(0xCCFAFAFA), // 80% 흰색 80%
-    Color(0xCCFAFAFA), // 100% 흰색 80%
+    Color(0xB3FAFAFA), // 80% 흰색 70%
+    Color(0xB3FAFAFA), // 100% 흰색 70%
   ],
   stops: <double>[0.0, 0.5, 0.8, 1.0],
 );
