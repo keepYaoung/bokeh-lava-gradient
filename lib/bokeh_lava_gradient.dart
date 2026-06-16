@@ -42,8 +42,10 @@ class _BokehPreset {
   final double opacity;
   final Brightness brightness; // 위에 올릴 콘텐츠/텍스트 대비용
   final Gradient? mask; // 그라디언트 위에 덮는 세로 마스크(선택)
+  final Gradient? topScrim; // 베이스↔블롭 사이에 까는 스크림(블롭엔 영향 최소)
+  final double topSatBoost; // 상단 블롭 채도 배율(>1 이면 위로 갈수록 채도↑)
   const _BokehPreset(this.base, this.colors, this.opacity, this.brightness,
-      {this.mask});
+      {this.mask, this.topScrim, this.topSatBoost = 1.0});
 }
 
 /// dark4 용 세로 마스크: 상단/하단은 검정(#0C0C0C), 60% 지점만 투명해
@@ -99,6 +101,18 @@ const Gradient _kLight2Mask = LinearGradient(
     Color(0xFFFDFDFD), // 100% 흰색 100%
   ],
   stops: <double>[0.0, 0.5, 1.0],
+);
+
+/// light-2-mask 상단 스크림: 상단을 살짝 어둡게(흰 여백 위 흰 글자 가독성).
+/// 베이스↔블롭 사이에 깔려서 블롭 색엔 영향이 거의 없다. (45%에서 사라짐)
+const Gradient _kLight2TopScrim = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: <Color>[
+    Color(0x802A1505), // 상단 웜 다크 ~50%
+    Color(0x002A1505), // 50%에서 투명
+  ],
+  stops: <double>[0.0, 0.5],
 );
 
 const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
@@ -185,6 +199,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     Brightness.light,
   ),
   // light2Mask — light2 + 세로 라이트 마스크 (상단 light2, 50%부터 흰색 페이드)
+  // + 상단 블롭 채도↑ + 상단 스크림(가독성)
   BokehTheme.light2Mask: _BokehPreset(
     Color(0xFFFAFAFA),
     <Color>[
@@ -196,6 +211,8 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.8,
     Brightness.light,
     mask: _kLight2Mask,
+    topScrim: _kLight2TopScrim,
+    topSatBoost: 1.5, // 상단 50%에서 블롭 채도 최대 1.5배
   ),
   // light3 — dark3 반전: base 검정→흰색, 다크 틸→라이트 틸, 그린/오렌지 유지
   BokehTheme.light3: _BokehPreset(
@@ -317,6 +334,12 @@ class BokehLavaGradient extends StatefulWidget {
   /// 그라디언트 위에 덮는 마스크(선택). 세로 윈도우 등.
   final Gradient? mask;
 
+  /// 베이스↔블롭 사이에 까는 스크림(선택). 블롭 색엔 영향 최소.
+  final Gradient? topScrim;
+
+  /// 상단 블롭 채도 배율(>1 이면 위 50%에서 위로 갈수록 채도↑).
+  final double topSatBoost;
+
   final Widget? child;
 
   const BokehLavaGradient({
@@ -342,6 +365,8 @@ class BokehLavaGradient extends StatefulWidget {
     this.lowResFactor = 0.45,
     this.targetFps = 30,
     this.mask,
+    this.topScrim,
+    this.topSatBoost = 1.0,
     this.child,
   });
 
@@ -373,6 +398,8 @@ class BokehLavaGradient extends StatefulWidget {
       lowResFactor: lowResFactor ?? 0.45,
       targetFps: targetFps ?? 30,
       mask: p.mask,
+      topScrim: p.topScrim,
+      topSatBoost: p.topSatBoost,
       child: child,
     );
   }
@@ -461,6 +488,9 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
           fit: StackFit.expand,
           children: <Widget>[
             ColoredBox(color: widget.baseColor),
+            // 스크림: 베이스 위·블롭 아래 → 흰 여백만 어둡게, 블롭은 그대로
+            if (widget.topScrim != null)
+              DecoratedBox(decoration: BoxDecoration(gradient: widget.topScrim)),
             ClipRect(
               child: Align(
                 alignment: Alignment.topLeft,
@@ -479,7 +509,8 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
                           tileMode: TileMode.decal,
                         ),
                         child: CustomPaint(
-                          painter: _BlobPainter(_field, paintColors, _repaint),
+                          painter: _BlobPainter(
+                              _field, paintColors, _repaint, widget.topSatBoost),
                           child: const SizedBox.expand(),
                         ),
                       ),
@@ -501,8 +532,9 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
 class _BlobPainter extends CustomPainter {
   final _BlobField field;
   final List<Color> colors;
+  final double topSatBoost; // 상단(0~50%) 블롭 채도 배율
 
-  _BlobPainter(this.field, this.colors, Listenable repaint)
+  _BlobPainter(this.field, this.colors, Listenable repaint, this.topSatBoost)
       : super(repaint: repaint);
 
   @override
@@ -511,7 +543,18 @@ class _BlobPainter extends CustomPainter {
 
     for (int i = 0; i < field.blobs.length; i++) {
       final b = field.blobs[i];
-      final c = colors[i % colors.length];
+      var c = colors[i % colors.length];
+      // 상단 50%에서 위로 갈수록 채도↑ (블롭 중심 y 기준).
+      if (topSatBoost != 1.0) {
+        final t = (1 - (b.y / size.height) / 0.5).clamp(0.0, 1.0);
+        if (t > 0) {
+          final hsl = HSLColor.fromColor(c);
+          c = hsl
+              .withSaturation(
+                  (hsl.saturation * (1 + (topSatBoost - 1) * t)).clamp(0.0, 1.0))
+              .toColor();
+        }
+      }
       final center = Offset(b.x, b.y);
       final shader = RadialGradient(
         colors: <Color>[c, c, c.withValues(alpha: 0)],
@@ -521,10 +564,12 @@ class _BlobPainter extends CustomPainter {
     }
   }
 
-  // repaint(Listenable)로만 다시 그린다.
+  // 항상 다시 그린다(애니메이션은 repaint Listenable 로 구동).
   @override
   bool shouldRepaint(_BlobPainter old) =>
-      !identical(old.field, field) || !identical(old.colors, colors);
+      !identical(old.field, field) ||
+      !identical(old.colors, colors) ||
+      old.topSatBoost != topSatBoost;
 }
 
 // ---- 떠다니는 블롭 필드 -------------------------------------------------
