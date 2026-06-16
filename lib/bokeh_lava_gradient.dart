@@ -28,6 +28,7 @@ enum BokehTheme {
   ogLight2,
   // light1,
   light2,
+  light2Mask,
   light3,
   // dark1,
   // dark2,
@@ -85,6 +86,19 @@ const Gradient _kOgLight2Mask = LinearGradient(
     Color(0xB3FAFAFA), // 100% 흰색 70%
   ],
   stops: <double>[0.0, 0.5, 0.8, 1.0],
+);
+
+/// light-2-mask 용 세로 마스크: 상단 50%까지 light2 노출,
+/// 50%→100% 흰색(#FDFDFD) 0%→100% 페이드인.
+const Gradient _kLight2Mask = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: <Color>[
+    Color(0x00FDFDFD), // 0%  투명 (light2 노출)
+    Color(0x00FDFDFD), // 50% 투명 (light2 노출)
+    Color(0xFFFDFDFD), // 100% 흰색 100%
+  ],
+  stops: <double>[0.0, 0.5, 1.0],
 );
 
 const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
@@ -162,13 +176,26 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   BokehTheme.light2: _BokehPreset(
     Color(0xFFFAFAFA),
     <Color>[
-      Color(0xFFA8D795), // 세이지 (명도·채도 ↑)
-      Color(0xFFF2823C), // 오렌지
-      Color(0xFFF0F1E2), // 페일 세이지 (색온도 살짝 ↑, 웜)
+      Color(0xFFA5DE8E), // 세이지 (채도 ↑)
+      Color(0xFFFF7F2F), // 오렌지 (채도 ↑)
+      Color(0xFFECF2E5), // 페일 세이지 (기존 롤백)
       Color(0xFFFFF4D8), // 크림 하이라이트
     ],
     0.8,
     Brightness.light,
+  ),
+  // light2Mask — light2 + 세로 라이트 마스크 (상단 light2, 50%부터 흰색 페이드)
+  BokehTheme.light2Mask: _BokehPreset(
+    Color(0xFFFAFAFA),
+    <Color>[
+      Color(0xFFA5DE8E), // 세이지 (채도 ↑)
+      Color(0xFFFF7F2F), // 오렌지 (채도 ↑)
+      Color(0xFFECF2E5), // 페일 세이지
+      Color(0xFFFFF4D8), // 크림 하이라이트
+    ],
+    0.8,
+    Brightness.light,
+    mask: _kLight2Mask,
   ),
   // light3 — dark3 반전: base 검정→흰색, 다크 틸→라이트 틸, 그린/오렌지 유지
   BokehTheme.light3: _BokehPreset(
