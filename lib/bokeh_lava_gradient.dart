@@ -103,18 +103,6 @@ const Gradient _kLight2Mask = LinearGradient(
   stops: <double>[0.0, 0.5, 1.0],
 );
 
-/// light-2-mask 상단 스크림: 상단을 살짝 어둡게(흰 여백 위 흰 글자 가독성).
-/// 베이스↔블롭 사이에 깔려서 블롭 색엔 영향이 거의 없다. (45%에서 사라짐)
-const Gradient _kLight2TopScrim = LinearGradient(
-  begin: Alignment.topCenter,
-  end: Alignment.bottomCenter,
-  colors: <Color>[
-    Color(0x802A1505), // 상단 웜 다크 ~50%
-    Color(0x002A1505), // 50%에서 투명
-  ],
-  stops: <double>[0.0, 0.5],
-);
-
 const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   // og — 원본 기본값 (밝은 번트 바탕 + 오렌지 그라데이션 9색)
   BokehTheme.og: _BokehPreset(
@@ -211,7 +199,6 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.8,
     Brightness.light,
     mask: _kLight2Mask,
-    topScrim: _kLight2TopScrim,
     topSatBoost: 1.5, // 상단 50%에서 블롭 채도 최대 1.5배
   ),
   // light3 — dark3 반전: base 검정→흰색, 다크 틸→라이트 틸, 그린/오렌지 유지
