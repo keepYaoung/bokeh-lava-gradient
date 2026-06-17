@@ -23,13 +23,13 @@ class DemoApp extends StatelessWidget {
 }
 
 const _labels = <BokehTheme, String>{
-  BokehTheme.og: 'OG',
-  BokehTheme.ogLight: 'OG Light',
-  BokehTheme.ogLight2: 'OG Light 2',
+  // BokehTheme.og: 'OG',
+  // BokehTheme.ogLight: 'OG Light',
+  // BokehTheme.ogLight2: 'OG Light 2',
   // BokehTheme.light1: 'Light 1',
   BokehTheme.light2: 'Light 2',
   BokehTheme.light2Mask: 'Light 2 Mask',
-  BokehTheme.light3: 'Light 3',
+  // BokehTheme.light3: 'Light 3',
   // BokehTheme.dark1: 'Dark 1',
   // BokehTheme.dark2: 'Dark 2',
   BokehTheme.dark3: 'Dark 3',
@@ -38,13 +38,13 @@ const _labels = <BokehTheme, String>{
 };
 
 const _captions = <BokehTheme, String>{
-  BokehTheme.og: 'original · burnt orange + 9-color gradient',
-  BokehTheme.ogLight: 'og gradient + light mask (orange top → white)',
-  BokehTheme.ogLight2: 'og gradient + light mask (more orange, fade 50→80%)',
+  // BokehTheme.og: 'original · burnt orange + 9-color gradient',
+  // BokehTheme.ogLight: 'og gradient + light mask (orange top → white)',
+  // BokehTheme.ogLight2: 'og gradient + light mask (more orange, fade 50→80%)',
   // BokehTheme.light1: 'bright cream · soft pastel peach blobs',
   BokehTheme.light2: 'bright cream · sage, terracotta + cream',
   BokehTheme.light2Mask: 'light2 + vertical mask (white fades in 50→100%)',
-  BokehTheme.light3: 'white · inverted dark3 (light teal + green/orange)',
+  // BokehTheme.light3: 'white · inverted dark3 (light teal + green/orange)',
   // BokehTheme.dark1: 'deep burnt orange · glowing amber',
   // BokehTheme.dark2: 'near-black · strong orange glow',
   BokehTheme.dark3: 'black · teal/green + orange glow',
@@ -60,7 +60,7 @@ class DemoScreen extends StatefulWidget {
 }
 
 class _DemoScreenState extends State<DemoScreen> {
-  BokehTheme _theme = BokehTheme.og;
+  BokehTheme _theme = BokehTheme.light2;
 
   @override
   Widget build(BuildContext context) {

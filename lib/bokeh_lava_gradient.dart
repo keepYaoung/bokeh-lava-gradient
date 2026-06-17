@@ -23,13 +23,13 @@ import 'package:flutter/scheduler.dart';
 
 /// 미리 정의된 배경 테마. (이 브랜치 활성: og, light2, dark3)
 enum BokehTheme {
-  og,
-  ogLight,
-  ogLight2,
+  // og,
+  // ogLight,
+  // ogLight2,
   // light1,
   light2,
   light2Mask,
-  light3,
+  // light3,
   // dark1,
   // dark2,
   dark3,
@@ -43,10 +43,9 @@ class _BokehPreset {
   final double opacity;
   final Brightness brightness; // 위에 올릴 콘텐츠/텍스트 대비용
   final Gradient? mask; // 그라디언트 위에 덮는 세로 마스크(선택)
-  final Gradient? topScrim; // 베이스↔블롭 사이에 까는 스크림(블롭엔 영향 최소)
   final double topSatBoost; // 상단 블롭 채도 배율(>1 이면 위로 갈수록 채도↑)
   const _BokehPreset(this.base, this.colors, this.opacity, this.brightness,
-      {this.mask, this.topScrim, this.topSatBoost = 1.0});
+      {this.mask, this.topSatBoost = 1.0});
 }
 
 /// dark4 용 세로 마스크: 상단/하단은 검정(#0C0C0C), 60% 지점만 투명해
@@ -64,6 +63,7 @@ const Gradient _kVerticalWindowMask = LinearGradient(
   stops: <double>[0.0, 0.4, 0.6, 0.9, 1.0],
 );
 
+/* og 계열 주석처리로 미사용 — 되살릴 때 함께 해제
 /// og-light 용 세로 마스크: 상단(0%)은 투명해 og 그라디언트가 보이고,
 /// 50% 지점부터 하단까지는 흰색(#FAFAFA) 80% opacity. (0%→50% 페이드인)
 const Gradient _kOgLightMask = LinearGradient(
@@ -90,6 +90,7 @@ const Gradient _kOgLight2Mask = LinearGradient(
   ],
   stops: <double>[0.0, 0.5, 0.8, 1.0],
 );
+*/
 
 /// light-2-mask 용 세로 마스크: 상단 50%까지 light2 노출,
 /// 50%→100% 흰색(#FDFDFD) 0%→100% 페이드인.
@@ -118,7 +119,7 @@ const Gradient _kDark3Mask = LinearGradient(
 );
 
 const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
-  // og — 원본 기본값 (밝은 번트 바탕 + 오렌지 그라데이션 9색)
+  /* og — 원본 기본값 (밝은 번트 바탕 + 오렌지 그라데이션 9색)
   BokehTheme.og: _BokehPreset(
     Color(0xFFC65318),
     <Color>[
@@ -171,6 +172,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     Brightness.light,
     mask: _kOgLight2Mask,
   ),
+  */
   /* light1 — 밝은 크림 바탕 + 소프트 파스텔 피치/살구 (화사·가벼움)
   BokehTheme.light1: _BokehPreset(
     Color(0xFFFFF1E2),
@@ -215,7 +217,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     mask: _kLight2Mask,
     topSatBoost: 1.5, // 상단 50%에서 블롭 채도 최대 1.5배
   ),
-  // light3 — dark3 반전: base 검정→흰색, 다크 틸→라이트 틸, 그린/오렌지 유지
+  /* light3 — dark3 반전: base 검정→흰색, 다크 틸→라이트 틸, 그린/오렌지 유지
   BokehTheme.light3: _BokehPreset(
     Color(0xFFFFFFFF),
     <Color>[
@@ -230,6 +232,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.8,
     Brightness.light,
   ),
+  */
   /* dark1 — 딥 번트 바탕 + 글로우 오렌지/앰버 (현재 기본과 ≈)
   BokehTheme.dark1: _BokehPreset(
     Color(0xFF8F2C00),
@@ -351,9 +354,6 @@ class BokehLavaGradient extends StatefulWidget {
   /// 그라디언트 위에 덮는 마스크(선택). 세로 윈도우 등.
   final Gradient? mask;
 
-  /// 베이스↔블롭 사이에 까는 스크림(선택). 블롭 색엔 영향 최소.
-  final Gradient? topScrim;
-
   /// 상단 블롭 채도 배율(>1 이면 위 50%에서 위로 갈수록 채도↑).
   final double topSatBoost;
 
@@ -382,7 +382,6 @@ class BokehLavaGradient extends StatefulWidget {
     this.lowResFactor = 0.45,
     this.targetFps = 30,
     this.mask,
-    this.topScrim,
     this.topSatBoost = 1.0,
     this.child,
   });
@@ -415,7 +414,6 @@ class BokehLavaGradient extends StatefulWidget {
       lowResFactor: lowResFactor ?? 0.45,
       targetFps: targetFps ?? 30,
       mask: p.mask,
-      topScrim: p.topScrim,
       topSatBoost: p.topSatBoost,
       child: child,
     );
@@ -506,8 +504,6 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
           children: <Widget>[
             ColoredBox(color: widget.baseColor),
             // 스크림: 베이스 위·블롭 아래 → 흰 여백만 어둡게, 블롭은 그대로
-            if (widget.topScrim != null)
-              DecoratedBox(decoration: BoxDecoration(gradient: widget.topScrim)),
             ClipRect(
               child: Align(
                 alignment: Alignment.topLeft,
