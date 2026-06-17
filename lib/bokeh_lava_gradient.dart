@@ -103,6 +103,19 @@ const Gradient _kLight2Mask = LinearGradient(
   stops: <double>[0.0, 0.5, 1.0],
 );
 
+/// dark3 용 세로 마스크: 상단 0~50% 검정(#0C0C0C) 0→100% 페이드,
+/// 50%→100% 검정 100%. (상단은 dark3 노출, 하단은 검정)
+const Gradient _kDark3Mask = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: <Color>[
+    Color(0x000C0C0C), // 0%  투명 (dark3 노출)
+    Color(0xFF0C0C0C), // 50% 검정 100%
+    Color(0xFF0C0C0C), // 100% 검정 100%
+  ],
+  stops: <double>[0.0, 0.5, 1.0],
+);
+
 const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   // og — 원본 기본값 (밝은 번트 바탕 + 오렌지 그라데이션 9색)
   BokehTheme.og: _BokehPreset(
@@ -265,6 +278,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     ],
     0.72,
     Brightness.dark,
+    mask: _kDark3Mask,
   ),
   // dark4 — dark3 그라디언트 그대로 + 세로 윈도우 마스크(상/하단 검정, 중앙 노출)
   BokehTheme.dark4: _BokehPreset(
