@@ -207,7 +207,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   // light2Mask — light2 + 세로 라이트 마스크 (상단 light2, 50%부터 흰색 페이드)
   // + 상단 블롭 채도↑ + 상단 스크림(가독성)
   BokehTheme.light2Mask: _BokehPreset(
-    Color(0xFFFAFAFA),
+    Color(0xFFFBFBF7),
     <Color>[
       Color(0xFFA5DE8E), // 세이지 (채도 ↑)
       Color(0xFFFF7F2F), // 오렌지 (채도 ↑)
