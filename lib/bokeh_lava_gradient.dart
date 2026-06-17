@@ -100,9 +100,9 @@ const Gradient _kLight2Mask = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
   colors: <Color>[
-    Color(0x00FDFDFD), // 0%  투명 (light2 노출)
-    Color(0x00FDFDFD), // 50% 투명 (light2 노출)
-    Color(0xFFFDFDFD), // 100% 흰색 100%
+    Color(0x00FBFBF7), // 0%  투명 (light2 노출)
+    Color(0x00FBFBF7), // 50% 투명 (light2 노출)
+    Color(0xFFFBFBF7), // 100% 흰색 100%
   ],
   stops: <double>[0.0, 0.5, 1.0],
 );
