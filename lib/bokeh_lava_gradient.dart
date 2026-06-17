@@ -34,7 +34,7 @@ enum BokehTheme {
   // dark2,
   dark3,
   dark3Mask,
-  dark4,
+  // dark4,
 }
 
 class _BokehPreset {
@@ -48,6 +48,7 @@ class _BokehPreset {
       {this.mask, this.topSatBoost = 1.0});
 }
 
+/* dark4 주석처리로 미사용 — 되살릴 때 함께 해제
 /// dark4 용 세로 마스크: 상단/하단은 검정(#0C0C0C), 60% 지점만 투명해
 /// 그 아래 그라디언트가 비치는 창. (40%→60% 페이드아웃, 60%→90% 페이드인)
 const Gradient _kVerticalWindowMask = LinearGradient(
@@ -62,6 +63,7 @@ const Gradient _kVerticalWindowMask = LinearGradient(
   ],
   stops: <double>[0.0, 0.4, 0.6, 0.9, 1.0],
 );
+*/
 
 /* og 계열 주석처리로 미사용 — 되살릴 때 함께 해제
 /// og-light 용 세로 마스크: 상단(0%)은 투명해 og 그라디언트가 보이고,
@@ -299,7 +301,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     Brightness.dark,
     mask: _kDark3Mask,
   ),
-  // dark4 — dark3 그라디언트 그대로 + 세로 윈도우 마스크(상/하단 검정, 중앙 노출)
+  /* dark4 — dark3 그라디언트 그대로 + 세로 윈도우 마스크(상/하단 검정, 중앙 노출)
   BokehTheme.dark4: _BokehPreset(
     Color(0xFF0C0C0C),
     <Color>[
@@ -315,6 +317,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     Brightness.dark,
     mask: _kVerticalWindowMask,
   ),
+  */
 };
 
 /// 프리셋의 밝기(위에 올릴 텍스트/아이콘 색 대비에 사용).
