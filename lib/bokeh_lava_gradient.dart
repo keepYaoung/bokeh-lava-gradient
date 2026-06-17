@@ -33,6 +33,7 @@ enum BokehTheme {
   // dark1,
   // dark2,
   dark3,
+  dark3Mask,
   dark4,
 }
 
@@ -266,6 +267,21 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   // 오렌지를 리스트 뒤쪽에 둬서 맨 위에 그려지고(occlusion 회피),
   // opacity 를 낮춰 보색(teal)과 칙칙하게 덮이지 않고 섞이게 한다.
   BokehTheme.dark3: _BokehPreset(
+    Color(0xFF000000),
+    <Color>[
+      Color(0xFF09353C),
+      Color(0xFF64AA74),
+      Color(0xFF034753),
+      Color(0xFFC15B2E),
+      Color(0xFFB14415),
+      Color(0xFFC15B2E),
+      Color(0xFFB14415),
+    ],
+    0.72,
+    Brightness.dark,
+  ),
+  // dark3Mask — dark3 + 세로 마스크 (상단 dark3, 50%부터 검정 #0C0C0C)
+  BokehTheme.dark3Mask: _BokehPreset(
     Color(0xFF000000),
     <Color>[
       Color(0xFF09353C),
