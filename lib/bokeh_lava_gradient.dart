@@ -274,9 +274,9 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   BokehTheme.dark3: _BokehPreset(
     Color(0xFF000000),
     <Color>[
-      Color(0xFF09353C),
+      Color(0xFF3E6454), // 다크 세이지-틸 (← #09353C)
       Color(0xFF64AA74),
-      Color(0xFF034753),
+      Color(0xFF3A6E61), // 다크 세이지-틸 (← #034753)
       Color(0xFFC15B2E),
       Color(0xFFB14415),
       Color(0xFFC15B2E),
@@ -289,9 +289,9 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   BokehTheme.dark3Mask: _BokehPreset(
     Color(0xFF000000),
     <Color>[
-      Color(0xFF09353C),
+      Color(0xFF3E6454), // 다크 세이지-틸 (← #09353C)
       Color(0xFF64AA74),
-      Color(0xFF034753),
+      Color(0xFF3A6E61), // 다크 세이지-틸 (← #034753)
       Color(0xFFC15B2E),
       Color(0xFFB14415),
       Color(0xFFC15B2E),
