@@ -29,6 +29,7 @@ enum BokehTheme {
   // light1,
   light2,
   light2Mask,
+  light2Mask2,
   // light3,
   // dark1,
   // dark2,
@@ -102,6 +103,19 @@ const Gradient _kLight2Mask = LinearGradient(
   colors: <Color>[
     Color(0x00FBFBF7), // 0%  투명 (light2 노출)
     Color(0x00FBFBF7), // 50% 투명 (light2 노출)
+    Color(0xFFFBFBF7), // 100% 흰색 100%
+  ],
+  stops: <double>[0.0, 0.5, 1.0],
+);
+
+/// light-2-mask2 용 세로 마스크: dark3Mask 조건을 흰색으로.
+/// 상단 0~50% 흰색(#FBFBF7) 0→100% 페이드인, 50%→100% 흰색 100%.
+const Gradient _kLight2Mask2 = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: <Color>[
+    Color(0x00FBFBF7), // 0%  투명 (light2 노출)
+    Color(0xFFFBFBF7), // 50% 흰색 100%
     Color(0xFFFBFBF7), // 100% 흰색 100%
   ],
   stops: <double>[0.0, 0.5, 1.0],
@@ -218,6 +232,20 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     Brightness.light,
     mask: _kLight2Mask,
     topSatBoost: 1.5, // 상단 50%에서 블롭 채도 최대 1.5배
+  ),
+  // light2Mask2 — light2 + 흰색 마스크 (dark3Mask 조건: 0~50% 페이드, 50%부터 흰색)
+  BokehTheme.light2Mask2: _BokehPreset(
+    Color(0xFFFBFBF7),
+    <Color>[
+      Color(0xFFA5DE8E), // 세이지 (채도 ↑)
+      Color(0xFFFF7F2F), // 오렌지 (채도 ↑)
+      Color(0xFFECF2E5), // 페일 세이지
+      Color(0xFFFFF4D8), // 크림 하이라이트
+    ],
+    0.8,
+    Brightness.light,
+    mask: _kLight2Mask2,
+    topSatBoost: 1.5,
   ),
   /* light3 — dark3 반전: base 검정→흰색, 다크 틸→라이트 틸, 그린/오렌지 유지
   BokehTheme.light3: _BokehPreset(
