@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:bokeh_lava_gradient/main.dart';
+import 'package:bokeh_lava_gradient_example/main.dart';
 
 void main() {
   testWidgets('demo builds and shows the 4 preset tabs', (tester) async {

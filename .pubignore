@@ -1,0 +1,11 @@
+# Repo-only artifacts that should not ship in the published package archive.
+docs/
+captures/
+assets/
+tool/
+.github/
+build/
+example/build/
+example/web/
+*.png
+.DS_Store

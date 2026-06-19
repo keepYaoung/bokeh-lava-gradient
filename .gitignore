@@ -46,3 +46,6 @@ app.*.map.json
 
 # generated preset captures
 /captures/
+
+# Flutter build output (any package)
+build/

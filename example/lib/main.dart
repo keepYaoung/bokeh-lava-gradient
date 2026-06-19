@@ -5,7 +5,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'bokeh_lava_gradient.dart';
+import 'package:bokeh_lava_gradient/bokeh_lava_gradient.dart';
 
 void main() => runApp(const DemoApp());
 
