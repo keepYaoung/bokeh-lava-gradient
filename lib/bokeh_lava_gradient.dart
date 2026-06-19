@@ -96,27 +96,27 @@ const Gradient _kOgLight2Mask = LinearGradient(
 */
 
 /// light-2-mask 용 세로 마스크: 상단 50%까지 light2 노출,
-/// 50%→100% 흰색(#FDFDFD) 0%→100% 페이드인.
+/// 50%→100% 흰색(#FAFAFA) 0%→100% 페이드인.
 const Gradient _kLight2Mask = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
   colors: <Color>[
-    Color(0x00FDFDFD), // 0%  투명 (light2 노출)
-    Color(0x00FDFDFD), // 50% 투명 (light2 노출)
-    Color(0xFFFDFDFD), // 100% 흰색 100%
+    Color(0x00FAFAFA), // 0%  투명 (light2 노출)
+    Color(0x00FAFAFA), // 50% 투명 (light2 노출)
+    Color(0xFFFAFAFA), // 100% 흰색 100%
   ],
   stops: <double>[0.0, 0.5, 1.0],
 );
 
 /// light-2-mask2 용 세로 마스크: dark3Mask 조건을 흰색으로.
-/// 상단 0~50% 흰색(#FDFDFD) 0→100% 페이드인, 50%→100% 흰색 100%.
+/// 상단 0~50% 흰색(#FAFAFA) 0→100% 페이드인, 50%→100% 흰색 100%.
 const Gradient _kLight2Mask2 = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
   colors: <Color>[
-    Color(0x00FDFDFD), // 0%  투명 (light2 노출)
-    Color(0xFFFDFDFD), // 50% 흰색 100%
-    Color(0xFFFDFDFD), // 100% 흰색 100%
+    Color(0x00FAFAFA), // 0%  투명 (light2 노출)
+    Color(0xFFFAFAFA), // 50% 흰색 100%
+    Color(0xFFFAFAFA), // 100% 흰색 100%
   ],
   stops: <double>[0.0, 0.5, 1.0],
 );
