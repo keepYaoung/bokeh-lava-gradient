@@ -8,8 +8,11 @@ Built originally for the rebrand (warm orange palette), but every color,
 size and motion knob is a parameter.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/keepYaoung/bokeh-lava-gradient/main/doc/bokeh_demo.gif" width="280" alt="bokeh lava gradient animated demo" />
+  <img src="https://raw.githubusercontent.com/keepYaoung/bokeh-lava-gradient/main/doc/demo_og.gif" width="30%" alt="og preset (animated)" />
+  <img src="https://raw.githubusercontent.com/keepYaoung/bokeh-lava-gradient/main/doc/demo_light2.gif" width="30%" alt="light2 preset (animated)" />
+  <img src="https://raw.githubusercontent.com/keepYaoung/bokeh-lava-gradient/main/doc/demo_dark3.gif" width="30%" alt="dark3 preset (animated)" />
 </p>
+<p align="center"><sub>live presets — <code>og</code> · <code>light2</code> · <code>dark3</code></sub></p>
 
 ## ▶️ Live simulation
 
@@ -21,13 +24,6 @@ keep drifting.
 
 > First load may take a few seconds (Flutter web bootstrap). Resize the window
 > to see the gradient stays full-bleed at any aspect ratio.
-
-<p align="center">
-  <img src="assets/preview/og.png" width="30%" alt="og preset" />
-  <img src="assets/preview/light2.png" width="30%" alt="light2 preset" />
-  <img src="assets/preview/dark3.png" width="30%" alt="dark3 preset" />
-</p>
-<p align="center"><sub>a few presets — <code>og</code> · <code>light2</code> · <code>dark3</code> (375×812 @2x)</sub></p>
 
 ## 🎨 Presets
 
