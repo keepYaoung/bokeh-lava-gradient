@@ -7,6 +7,10 @@ cross-fades between frames. Pure Flutter, **zero dependencies**.
 Built originally for the rebrand (warm orange palette), but every color,
 size and motion knob is a parameter.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/keepYaoung/bokeh-lava-gradient/main/doc/bokeh_demo.gif" width="280" alt="bokeh lava gradient animated demo" />
+</p>
+
 ## ▶️ Live simulation
 
 **https://keepyaoung.github.io/bokeh-lava-gradient/**

@@ -1,5 +1,6 @@
 # Repo-only artifacts that should not ship in the published package archive.
 docs/
+doc/
 captures/
 assets/
 tool/
@@ -7,5 +8,7 @@ tool/
 build/
 example/build/
 example/web/
+test/gen_gif_test.dart
 *.png
+*.gif
 .DS_Store
