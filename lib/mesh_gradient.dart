@@ -71,6 +71,8 @@ class _Shape {
   const _Shape(this.d, this.fill, this.blur);
 }
 
+/// A single background frame (`f_01`–`f_04`).
+///
 /// 하나의 배경 프레임(f_01 ~ f_04).
 @immutable
 class MeshPreset {
@@ -248,14 +250,20 @@ Path _parsePath(String d) {
 
 // ---- 위젯 --------------------------------------------------------------
 
-/// Figma 메시 배경. [preset] 을 바꾸면 [crossDuration] 동안 크로스페이드된다.
-/// [animateAmbient] 면 가만히 있어도 메시가 천천히 일렁인다.
+/// A Figma mesh-gradient background. Changing [preset] cross-fades over
+/// [crossDuration]; when [animateAmbient] is true the mesh keeps gently
+/// undulating even while idle.
+///
+/// Figma 메시 배경. [preset]을 바꾸면 [crossDuration] 동안 크로스페이드된다.
+/// [animateAmbient]면 가만히 있어도 메시가 천천히 일렁인다.
 class MeshGradient extends StatefulWidget {
   final MeshPreset preset;
   final Duration crossDuration;
   final Curve curve;
   final bool animateAmbient;
 
+  /// Ambient drift strength (0 = still, 1 = default).
+  ///
   /// 앰비언트 드리프트 세기(0=정지, 1=기본).
   final double driftAmount;
   final Duration driftPeriod;

@@ -1,3 +1,9 @@
+## 1.0.2
+
+- Documentation: public API doc comments are now English-first with a Korean
+  translation (`BokehLavaGradient`, `BokehTheme`, `bokehThemeBrightness`,
+  `MeshGradient`, `MeshPreset`).
+
 ## 1.0.1
 
 - Add an animated demo GIF to the README.

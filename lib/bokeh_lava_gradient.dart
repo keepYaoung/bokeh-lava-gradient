@@ -21,7 +21,9 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-/// 미리 정의된 배경 테마. 원본(og) + 라이트 3 + 다크 3.
+/// Predefined background themes — the original (`og`) plus 3 light and 3 dark.
+///
+/// 미리 정의된 배경 테마 — 원본(og) + 라이트 3 + 다크 3.
 enum BokehTheme { og, light1, light2, light3, dark1, dark2, dark3 }
 
 class _BokehPreset {
@@ -142,37 +144,68 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
   ),
 };
 
+/// The preset's [Brightness] — use it to pick readable text/icon colors for
+/// content placed on top.
+///
 /// 프리셋의 밝기(위에 올릴 텍스트/아이콘 색 대비에 사용).
 Brightness bokehThemeBrightness(BokehTheme theme) =>
     _kPresets[theme]!.brightness;
 
+/// An animated bokeh / lava gradient background.
+///
+/// Soft colored blobs drift slowly under a Gaussian blur; overlapping blobs
+/// blend via alpha. Fills its parent and renders [child] on top.
+///
+/// 애니메이션 보케 / 라바 그라디언트 배경.
+/// 부드러운 색 블롭들이 가우시안 블러 아래로 천천히 떠다니고, 겹치는 블롭은
+/// 알파로 섞인다. 부모를 가득 채우고 위에 [child]를 그린다.
 class BokehLavaGradient extends StatefulWidget {
+  /// Base color filling behind the blobs.
+  ///
   /// 블롭 뒤를 채우는 베이스 색.
   final Color baseColor;
 
+  /// Colors cycled across the blobs (your brand palette).
+  ///
   /// 블롭에 순환 적용할 색들(브랜드 팔레트).
   final List<Color> colors;
 
+  /// Number of blobs.
+  ///
   /// 블롭 개수.
   final int blobCount;
 
+  /// Motion speed (1 = default, 0.4 = leisurely).
+  ///
   /// 모션 속도(1=기본, 0.4=느긋).
   final double speed;
 
+  /// Blur sigma as a fraction of the shortest side (bokeh strength).
+  ///
   /// 짧은 변 대비 블러 시그마 비율(보케 강도).
   final double blurStrength;
 
+  /// Blob opacity. Below 1, overlapping blobs blend their colors for variety.
+  ///
   /// 블롭 불투명도. 1 미만이면 겹친 블롭끼리 색이 섞여 다채로워진다.
   final double blobOpacity;
 
+  /// Blob radius range (fraction of the shortest side). A wider min↔max gap
+  /// yields more size variety.
+  ///
   /// 블롭 반경 범위(짧은 변 대비). min↔max 차이가 클수록 크기가 다양해진다.
   final double minBlobRadius;
   final double maxBlobRadius;
 
+  /// [Performance] Blur-buffer resolution factor (0–1). Lower is cheaper;
+  /// around 0.45 the blurred result is visually almost identical.
+  ///
   /// [성능] 블러 버퍼 해상도 배율(0~1). 낮을수록 가볍고, 0.45 정도면
   /// 흐린 결과라 육안 차이가 거의 없다.
   final double lowResFactor;
 
+  /// [Performance] Target frame rate. The drift is slow, so ~30 is plenty.
+  ///
   /// [성능] 목표 프레임레이트. 드리프트가 느려 30 정도면 충분.
   final int targetFps;
 
@@ -203,7 +236,10 @@ class BokehLavaGradient extends StatefulWidget {
     this.child,
   });
 
-  /// 미리 정의된 라이트/다크 테마로 생성. (baseColor·colors·blobOpacity 세팅)
+  /// Builds from a predefined light/dark theme (sets baseColor, colors,
+  /// blobOpacity). Other knobs use defaults and can be overridden per argument.
+  ///
+  /// 미리 정의된 라이트/다크 테마로 생성(baseColor·colors·blobOpacity 세팅).
   /// 나머지 노브는 기본값이며 필요시 개별 인자로 덮어쓸 수 있다.
   factory BokehLavaGradient.preset(
     BokehTheme theme, {
