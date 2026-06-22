@@ -1,21 +1,37 @@
 // ============================================================
+// Mesh Gradient Background  (path-faithful reproduction)
 // Mesh Gradient Background  (path-faithful 재현)
 //
-// Figma: MVP ~ 1.0.0 / 내부 디자인
+// Figma: MVP ~ 1.0.0 / internal design
 //        (node redacted, frames f_01 ~ f_04)
+// Figma: MVP ~ 1.0.0 / 내부 디자인
 //
+// Draws the actual vector path / linear gradient / feGaussianBlur from the
+// Figma SVG export verbatim. It uses the design's organic shapes themselves
+// (not a circular-blob approximation), so the reference mesh feel survives.
 // Figma SVG export 의 실제 벡터 path / linear gradient / feGaussianBlur 를
 // 그대로 옮겨 그린다. 원형 blob 근사가 아니라 디자인의 유기적 셰이프 자체를
 // 사용하므로 레퍼런스 메시 느낌이 그대로 산다.
 //
+//   - Each shape path scales from viewBox (e.g. 1892×1178) to screen coords.
+//     preserveAspectRatio="none", so width/height stretch separately
+//     (non-uniform).
+//   - Each shape is blurred individually with MaskFilter.blur(stdDeviation)
+//     (1:1 with Figma).
+//   - The base is a solid or linear-gradient fill.
 //   - 각 셰이프 path 는 viewBox(1892×1178 등) 좌표 → 화면 좌표로 스케일.
 //     preserveAspectRatio="none" 라 가로/세로 따로 늘려(non-uniform) 매핑.
 //   - 셰이프마다 MaskFilter.blur(stdDeviation) 로 개별 블러 (Figma 와 1:1).
 //   - 베이스는 solid 또는 linear gradient 채움.
 //
+// Transition: path topology differs per frame so lerp is impossible →
+// cross-fade. Drift: a light transform on the cached (RepaintBoundary) mesh.
 // 전환: 프레임마다 path 토폴로지가 달라 lerp 불가 → 크로스페이드.
 // 드리프트: 캐싱된(RepaintBoundary) 메시 레이어에 가벼운 transform 만 적용.
 //
+// Example:
+//   MeshGradient(preset: MeshPreset.f01, child: ...)
+//   // Just change preset and it cross-fades smoothly.
 // 사용 예:
 //   MeshGradient(preset: MeshPreset.f01, child: ...)
 //   // preset 만 바꾸면 부드럽게 크로스페이드된다.
@@ -26,8 +42,11 @@ import 'dart:ui' as ui show Gradient;
 
 import 'package:flutter/material.dart';
 
+// ---- fill / shape / preset data (1:1 with the Figma original) ----------
 // ---- fill / shape / preset 데이터 (Figma 원본 1:1) ---------------------
 
+/// Solid or linear-gradient fill. Coordinates are in viewBox (userSpace).
+///
 /// solid 또는 linear gradient 채움. 좌표는 viewBox(userSpace) 기준.
 @immutable
 class _Fill {
@@ -46,6 +65,8 @@ class _Fill {
   const _Fill.linear(this.from, this.to, this.colors, this.stops)
       : color = null;
 
+  /// Applies the fill to [paint], accounting for the screen scale (sx, sy).
+  ///
   /// 화면 스케일(sx, sy)을 반영해 Paint 에 채움을 적용한다.
   void applyTo(Paint paint, double sx, double sy) {
     if (color != null) {
@@ -65,7 +86,7 @@ class _Fill {
 
 @immutable
 class _Shape {
-  final String d; // SVG path data (M/L/C/Z, 절대좌표)
+  final String d; // SVG path data (M/L/C/Z, absolute coords) / 절대좌표
   final _Fill fill;
   final double blur; // feGaussianBlur stdDeviation (userSpace)
   const _Shape(this.d, this.fill, this.blur);
@@ -83,12 +104,12 @@ class MeshPreset {
 
   const MeshPreset._(this.name, this.viewBox, this._base, this._shapes);
 
-  // 자주 쓰는 원색
+  // frequently used base colors / 자주 쓰는 원색
   static const _orange = Color(0xFFF1723A);
   static const _burnt = Color(0xFF932D00);
   static const _cream = Color(0xFFE4C188);
 
-  // ---- f_01 : 밝은 오렌지 + 크림 하이라이트 --------------------------
+  // ---- f_01 : bright orange + cream highlight / 밝은 오렌지 + 크림 하이라이트 ----
   static const f01 = MeshPreset._(
     'f_01',
     Size(1892, 1178),
@@ -115,7 +136,7 @@ class MeshPreset {
     ],
   );
 
-  // ---- f_02 : 좌상단 다크 + 우측 피치 --------------------------------
+  // ---- f_02 : dark top-left + peach on the right / 좌상단 다크 + 우측 피치 ----
   static const f02 = MeshPreset._(
     'f_02',
     Size(1892, 1178),
@@ -151,7 +172,7 @@ class MeshPreset {
     ],
   );
 
-  // ---- f_03 : 다크 무드 (블랙/브라운 그림자) -------------------------
+  // ---- f_03 : dark mood (black/brown shadows) / 다크 무드 (블랙/브라운 그림자) ----
   static const f03 = MeshPreset._(
     'f_03',
     Size(1892, 1178),
@@ -180,7 +201,7 @@ class MeshPreset {
     ],
   );
 
-  // ---- f_04 : 피치→크림 + 딥 번트 ------------------------------------
+  // ---- f_04 : peach→cream + deep burnt / 피치→크림 + 딥 번트 ----
   static const f04 = MeshPreset._(
     'f_04',
     Size(1892, 1151),
@@ -205,7 +226,7 @@ class MeshPreset {
   static const List<MeshPreset> all = <MeshPreset>[f01, f02, f03, f04];
 }
 
-// ---- SVG path 파서 (M/L/C/Z 절대좌표) ----------------------------------
+// ---- SVG path parser (M/L/C/Z, absolute coords) / SVG path 파서 --------
 
 final Map<String, Path> _pathCache = <String, Path>{};
 final RegExp _token =
@@ -229,7 +250,7 @@ Path _parsePath(String d) {
         case 'M':
           final x = next(), y = next();
           path.moveTo(x, y);
-          cmd = 'L'; // 이후 좌표쌍은 암묵적 lineTo
+          cmd = 'L'; // following coord pairs are implicit lineTo / 이후 좌표쌍은 암묵적 lineTo
           break;
         case 'L':
           path.lineTo(next(), next());
@@ -241,14 +262,14 @@ Path _parsePath(String d) {
           path.close();
           break;
         default:
-          i++; // 안전장치
+          i++; // safety guard / 안전장치
       }
     }
     return path;
   });
 }
 
-// ---- 위젯 --------------------------------------------------------------
+// ---- widget / 위젯 -----------------------------------------------------
 
 /// A Figma mesh-gradient background. Changing [preset] cross-fades over
 /// [crossDuration]; when [animateAmbient] is true the mesh keeps gently
@@ -330,6 +351,7 @@ class _MeshGradientState extends State<MeshGradient>
     super.dispose();
   }
 
+  // A single cached mesh layer.
   // 캐싱되는 단일 메시 레이어
   Widget _layer(MeshPreset preset) => RepaintBoundary(
         child: CustomPaint(
@@ -358,6 +380,8 @@ class _MeshGradientState extends State<MeshGradient>
           },
         );
 
+        // Drift: scale the cached mesh up slightly (always ≥1) and translate
+        // it to undulate. Always scaled up, so moving never exposes the edges.
         // 드리프트: 캐싱된 메시를 살짝 확대(항상 ≥1)·이동시켜 일렁임.
         // 항상 확대 상태라 이동해도 가장자리가 노출되지 않는다.
         final Widget drifted = widget.animateAmbient && widget.driftAmount > 0
@@ -402,13 +426,15 @@ class _MeshPainter extends CustomPainter {
     final vb = preset.viewBox;
     final sx = size.width / vb.width;
     final sy = size.height / vb.height;
-    final s = (sx + sy) / 2; // 블러는 균일 시그마라 평균 스케일 사용
+    final s = (sx + sy) / 2; // blur uses a uniform sigma → average scale / 블러는 균일 시그마라 평균 스케일 사용
 
+    // 1) Base fill (whole screen, no blur → fills right up to the edges).
     // 1) 베이스 채움 (화면 전체, 블러 없음 → 가장자리까지 꽉 참)
     final basePaint = Paint()..isAntiAlias = true;
     preset._base.applyTo(basePaint, sx, sy);
     canvas.drawRect(Offset.zero & size, basePaint);
 
+    // 2) Shapes: scale viewBox coords to screen coords, each blurred.
     // 2) 셰이프들: viewBox 좌표를 화면 좌표로 스케일, 각자 블러
     final matrix = Matrix4.diagonal3Values(sx, sy, 1).storage;
     for (final shape in preset._shapes) {

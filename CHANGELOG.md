@@ -1,3 +1,8 @@
+## 1.0.3
+
+- Source comments throughout `lib/` are now bilingual (English + Korean),
+  including the file headers, preset descriptions, and internal notes.
+
 ## 1.0.2
 
 - Documentation: public API doc comments are now English-first with a Korean

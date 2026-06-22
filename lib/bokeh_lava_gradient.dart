@@ -1,16 +1,28 @@
 // ============================================================
 // BokehLavaGradient — animated bokeh / lava gradient background
 //
+// Soft colored blobs of varied size drift slowly and blend into a bokeh
+// background. Each blob is a soft radial-gradient circle in its own color;
+// the whole layer gets a Gaussian blur → bokeh.
 // 여러 색·크기의 블롭이 천천히 떠다니며 부드럽게 섞이는 보케 배경.
 // 각 블롭은 자기 색의 soft radial-gradient 원, 전체에 Gaussian 블러 → 보케.
 //
-// 성능 최적화(외관은 거의 동일):
-//   1) 저해상도 블러 — 블롭을 lowResFactor 배 버퍼에 그려 블러 후 업스케일.
-//      블러 비용 ∝ 픽셀 수 → factor² 만큼 절감. 결과는 어차피 흐려서 차이 미미.
-//   2) fps throttle — targetFps 로 제한(시간 기반 dt 라 속도는 유지).
-//   3) 안 보일 때 정지 — Ticker(TickerMode)로 화면이 덮이면 자동 멈춤,
-//      앱이 백그라운드로 가면 정지.
+// Performance (appearance nearly identical):
+//   1) Low-res blur — draw blobs into a lowResFactor-scaled buffer, blur, then
+//      upscale. Blur cost ∝ pixels → saved by factor². The result is blurry
+//      anyway, so the difference is negligible.
+//   2) fps throttle — capped at targetFps (time-based dt, so speed is kept).
+//   3) Pause when hidden — a Ticker (TickerMode) auto-stops when the screen is
+//      covered, and stops when the app is backgrounded.
+//   성능 최적화(외관은 거의 동일):
+//     1) 저해상도 블러 — 블롭을 lowResFactor 배 버퍼에 그려 블러 후 업스케일.
+//        블러 비용 ∝ 픽셀 수 → factor² 만큼 절감. 결과는 어차피 흐려서 차이 미미.
+//     2) fps throttle — targetFps 로 제한(시간 기반 dt 라 속도는 유지).
+//     3) 안 보일 때 정지 — Ticker(TickerMode)로 화면이 덮이면 자동 멈춤,
+//        앱이 백그라운드로 가면 정지.
 //
+// The bouncing-blob motion idea is adapted from lava_lamp_effect (MIT,
+// © yashas-hm, https://github.com/yashas-hm/lava-lamp-effect) Goblets.
 // 블롭의 바운싱 모션 아이디어는 lava_lamp_effect (MIT, © yashas-hm,
 // https://github.com/yashas-hm/lava-lamp-effect) 의 Goblets 를 참고.
 // ============================================================
@@ -30,11 +42,14 @@ class _BokehPreset {
   final Color base;
   final List<Color> colors;
   final double opacity;
-  final Brightness brightness; // 위에 올릴 콘텐츠/텍스트 대비용
+  // for contrast of content/text placed on top
+  // 위에 올릴 콘텐츠/텍스트 대비용
+  final Brightness brightness;
   const _BokehPreset(this.base, this.colors, this.opacity, this.brightness);
 }
 
 const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
+  // og — original defaults (bright burnt base + 9-color orange gradient)
   // og — 원본 기본값 (밝은 번트 바탕 + 오렌지 그라데이션 9색)
   BokehTheme.og: _BokehPreset(
     Color(0xFFC65318),
@@ -52,6 +67,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.85,
     Brightness.dark,
   ),
+  // light1 — bright cream base + soft pastel peach/apricot (airy, light)
   // light1 — 밝은 크림 바탕 + 소프트 파스텔 피치/살구 (화사·가벼움)
   BokehTheme.light1: _BokehPreset(
     Color(0xFFFFF1E2),
@@ -67,19 +83,22 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.6,
     Brightness.light,
   ),
+  // light2 — bright cream base (light1 base) + sage/olive/terracotta + cream.
+  // Base is near-white, so opacity is raised so blobs don't wash out.
   // light2 — 밝은 크림 바탕(light1 베이스) + 세이지/올리브/테라코타 + 크림
   // 베이스가 거의 흰색이라 opacity 를 높여 블롭이 워시아웃되지 않게.
   BokehTheme.light2: _BokehPreset(
     Color(0xFFFFF8EE),
     <Color>[
-      Color(0xFF9BBF8E), // 라이트 세이지
-      Color(0xFFAE5C34), // 테라코타
-      Color(0xFFECF2E5), // 페일 세이지 (웜 화이트에 가깝게)
-      Color(0xFFFFF4D8), // 크림 하이라이트
+      Color(0xFF9BBF8E), // light sage / 라이트 세이지
+      Color(0xFFAE5C34), // terracotta / 테라코타
+      Color(0xFFECF2E5), // pale sage (near warm white) / 페일 세이지
+      Color(0xFFFFF4D8), // cream highlight / 크림 하이라이트
     ],
     0.8,
     Brightness.light,
   ),
+  // light3 — warm cream base + sage/olive/terracotta earth tones (+ cream)
   // light3 — 웜 크림 바탕 + 세이지/올리브/테라코타 어스톤 (+ 크림 하이라이트)
   BokehTheme.light3: _BokehPreset(
     Color(0xFFF7E0B6),
@@ -88,11 +107,12 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
       Color(0xFF1C1F16),
       Color(0xFFAE5C34),
       Color(0xFF9BBF8E),
-      Color(0xFFFFF4D8), // 베이스보다 밝은 크림 하이라이트
+      Color(0xFFFFF4D8), // cream highlight brighter than the base / 베이스보다 밝은 크림 하이라이트
     ],
     0.6,
     Brightness.light,
   ),
+  // dark1 — deep burnt base + glowing orange/amber (≈ current default)
   // dark1 — 딥 번트 바탕 + 글로우 오렌지/앰버 (현재 기본과 ≈)
   BokehTheme.dark1: _BokehPreset(
     Color(0xFF8F2C00),
@@ -110,6 +130,7 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.85,
     Brightness.dark,
   ),
+  // dark2 — near-black base + strong orange glow (dramatic, high-contrast)
   // dark2 — 거의 블랙 바탕 + 강한 오렌지 글로우 (드라마틱·하이콘트라스트)
   BokehTheme.dark2: _BokehPreset(
     Color(0xFF160B04),
@@ -125,6 +146,10 @@ const Map<BokehTheme, _BokehPreset> _kPresets = <BokehTheme, _BokehPreset>{
     0.9,
     Brightness.dark,
   ),
+  // dark3 — black base + teal/green + orange glow.
+  // Orange is placed late in the list so it draws on top (avoids occlusion),
+  // and opacity is lowered so it mixes with the complementary teal instead of
+  // dully covering it.
   // dark3 — 블랙 바탕 + 틸/그린 + 오렌지 글로우
   // 오렌지를 리스트 뒤쪽에 둬서 맨 위에 그려지고(occlusion 회피),
   // opacity 를 낮춰 보색(teal)과 칙칙하게 덮이지 않고 섞이게 한다.
@@ -215,15 +240,15 @@ class BokehLavaGradient extends StatefulWidget {
     super.key,
     this.baseColor = const Color(0xFFC65318),
     this.colors = const <Color>[
-      Color(0xFFFFE6B8), // 페일 크림
-      Color(0xFFFFD089), // 골든
-      Color(0xFFFFB85C), // 앰버
-      Color(0xFFFF9A43), // 라이트 오렌지
-      Color(0xFFFC7C2C), // 오렌지
-      Color(0xFFF26019), // 비비드 오렌지
-      Color(0xFFD94E10), // 딥 오렌지
-      Color(0xFFFFCBA0), // 피치 크림
-      Color(0xFF932D00), // 딥 번트
+      Color(0xFFFFE6B8), // pale cream / 페일 크림
+      Color(0xFFFFD089), // golden / 골든
+      Color(0xFFFFB85C), // amber / 앰버
+      Color(0xFFFF9A43), // light orange / 라이트 오렌지
+      Color(0xFFFC7C2C), // orange / 오렌지
+      Color(0xFFF26019), // vivid orange / 비비드 오렌지
+      Color(0xFFD94E10), // deep orange / 딥 오렌지
+      Color(0xFFFFCBA0), // peach cream / 피치 크림
+      Color(0xFF932D00), // deep burnt / 딥 번트
     ],
     this.blobCount = 12,
     this.speed = 1.0,
@@ -291,6 +316,7 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
   }
 
   void _onTick(Duration elapsed) {
+    // Throttle to targetFps: skip if the interval hasn't elapsed yet.
     // targetFps 로 제한: 간격이 안 찼으면 스킵.
     final intervalUs = 1000000 / widget.targetFps;
     final dtUs = (elapsed - _last).inMicroseconds;
@@ -298,7 +324,9 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
     final dt = _last == Duration.zero ? 1 / widget.targetFps : dtUs / 1000000.0;
     _last = elapsed;
     _field.tick(dt);
-    _repaint.value++; // CustomPaint(repaint:) 만 다시 그림 → setState 없음
+    // Repaints only CustomPaint(repaint:) → no setState.
+    // CustomPaint(repaint:) 만 다시 그림 → setState 없음
+    _repaint.value++;
   }
 
   @override
@@ -315,6 +343,7 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Stop while backgrounded/inactive (saves battery and GPU).
     // 백그라운드/비활성에서는 정지(배터리·GPU 절약).
     final active = state == AppLifecycleState.resumed;
     if (active && !_ticker.isActive) {
@@ -342,6 +371,8 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
         final f = widget.lowResFactor.clamp(0.1, 1.0);
         final lowW = max(1.0, w * f);
         final lowH = max(1.0, h * f);
+        // Blur on the low-res buffer; after upscale (1/f) it matches a
+        // full-res sigma.
         // 블러는 저해상도 버퍼에서. 업스케일(1/f) 후 풀해상도 sigma 와 동일.
         final sigma = max(0.1, min(lowW, lowH) * widget.blurStrength);
 
@@ -360,7 +391,7 @@ class _BokehLavaGradientState extends State<BokehLavaGradient>
                 child: Transform.scale(
                   scale: 1 / f,
                   alignment: Alignment.topLeft,
-                  filterQuality: FilterQuality.low, // 부드러운 업스케일
+                  filterQuality: FilterQuality.low, // smooth upscale / 부드러운 업스케일
                   child: SizedBox(
                     width: lowW,
                     height: lowH,
@@ -398,7 +429,8 @@ class _BlobPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    field.ensureSize(size); // 저해상도 버퍼 크기에서 동작
+    // operates at the low-res buffer size / 저해상도 버퍼 크기에서 동작
+    field.ensureSize(size);
 
     for (int i = 0; i < field.blobs.length; i++) {
       final b = field.blobs[i];
@@ -412,18 +444,19 @@ class _BlobPainter extends CustomPainter {
     }
   }
 
+  // Repaints only via the repaint Listenable.
   // repaint(Listenable)로만 다시 그린다.
   @override
   bool shouldRepaint(_BlobPainter old) =>
       !identical(old.field, field) || !identical(old.colors, colors);
 }
 
-// ---- 떠다니는 블롭 필드 -------------------------------------------------
+// ---- drifting blob field / 떠다니는 블롭 필드 --------------------------
 
 class _Blob {
-  double x, y; // 중심
-  double vx, vy; // 속도 (px/초)
-  double r; // 반경
+  double x, y; // center / 중심
+  double vx, vy; // velocity (px/s) / 속도 (px/초)
+  double r; // radius / 반경
   _Blob(this.x, this.y, this.vx, this.vy, this.r);
 }
 
@@ -446,6 +479,8 @@ class _BlobField {
     blobs.clear();
     for (int i = 0; i < count; i++) {
       final r = shortest * (minR + (maxR - minR) * _rand.nextDouble());
+      // Velocity is in shortest-side fraction/sec → feels the same regardless
+      // of the (low-res) buffer resolution.
       // 속도는 짧은 변 비율/초 → 해상도(저해상도 버퍼)와 무관하게 같은 체감.
       double v() => (_rand.nextBool() ? 1 : -1) *
           (0.3 + 0.9 * _rand.nextDouble()) *
@@ -462,6 +497,9 @@ class _BlobField {
     }
   }
 
+  /// Advance by dt (seconds), reflecting off walls. The center may go slightly
+  /// past the edge (by a fraction of the radius).
+  ///
   /// dt(초)만큼 이동, 벽 반사. 중심이 반경 일부만큼 밖으로 나가도 허용.
   void tick(double dt) {
     if (blobs.isEmpty) return;
