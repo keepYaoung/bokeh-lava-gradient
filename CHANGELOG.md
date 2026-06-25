@@ -1,3 +1,7 @@
+## 1.0.4
+
+- Add a package screenshot/thumbnail (shown on the pub.dev page and in search).
+
 ## 1.0.3
 
 - Source comments throughout `lib/` are now bilingual (English + Korean),

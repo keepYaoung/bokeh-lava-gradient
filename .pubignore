@@ -9,6 +9,11 @@ build/
 example/build/
 example/web/
 test/gen_gif_test.dart
+test/gen_thumb_test.dart
 *.png
 *.gif
 .DS_Store
+
+# …but keep the pub.dev screenshot (referenced by pubspec screenshots:)
+!screenshots/
+!screenshots/thumbnail.png
