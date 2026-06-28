@@ -1,5 +1,11 @@
 # 🟠 bokeh-lava-gradient
 
+[![pub package](https://img.shields.io/pub/v/bokeh_lava_gradient.svg)](https://pub.dev/packages/bokeh_lava_gradient)
+[![likes](https://img.shields.io/pub/likes/bokeh_lava_gradient)](https://pub.dev/packages/bokeh_lava_gradient/score)
+[![pub points](https://img.shields.io/pub/points/bokeh_lava_gradient)](https://pub.dev/packages/bokeh_lava_gradient/score)
+[![platform](https://img.shields.io/badge/platform-flutter-02569B.svg)](https://flutter.dev)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Animated **bokeh / lava gradient backgrounds** for Flutter — soft colored blobs
 drifting under a Gaussian blur, plus a path-faithful **mesh gradient** that
 cross-fades between frames. Pure Flutter, **zero dependencies**.
