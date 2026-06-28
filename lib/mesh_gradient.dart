@@ -1,10 +1,9 @@
 // ============================================================
 // Mesh Gradient Background  (path-faithful reproduction)
-// Mesh Gradient Background  (path-faithful 재현)
+// 메시 그라디언트 배경  (path-faithful 재현)
 //
-// Figma: MVP ~ 1.0.0 / internal design
-//        (node redacted, frames f_01 ~ f_04)
-// Figma: MVP ~ 1.0.0 / 내부 디자인
+// Reproduced from a Figma SVG export (4 frames: f_01 ~ f_04).
+// Figma SVG export 에서 옮긴 4개 프레임(f_01 ~ f_04).
 //
 // Draws the actual vector path / linear gradient / feGaussianBlur from the
 // Figma SVG export verbatim. It uses the design's organic shapes themselves

@@ -2,7 +2,7 @@ name: bokeh_lava_gradient
 description: >-
   Animated bokeh / lava gradient backgrounds for Flutter — soft colored blobs
   drifting under a Gaussian blur, with ready-made light & dark presets.
-version: 1.0.5
+version: 1.0.6
 repository: https://github.com/keepYaoung/bokeh-lava-gradient
 homepage: https://github.com/keepYaoung/bokeh-lava-gradient
 issue_tracker: https://github.com/keepYaoung/bokeh-lava-gradient/issues

@@ -1,3 +1,8 @@
+## 1.0.6
+
+- Docs: remove an internal project reference from the README and source
+  comments; reword to generic descriptions.
+
 ## 1.0.5
 
 - Add `AGENTS.md` — an integration guide for AI coding agents, plus an honest,
