@@ -132,12 +132,6 @@ docs/                        # built web demo (served by GitHub Pages)
 > push by `.github/workflows/sync-readme.yml`. Run it locally with
 > `dart run tool/update_readme.dart`.
 
-## 📝 License
-
-MIT. The metaball / lava-blob motion was adapted from
-[lava_lamp_effect](https://github.com/yashas-hm/lava-lamp-effect) (MIT, © yashas-hm).
-See [LICENSE](LICENSE).
-
 ## 💙 Support
 
 If this package saved you some time, a like really helps it reach other
@@ -149,3 +143,17 @@ developers:
 > Using an AI coding agent? It may have learned from this repo's
 > [`AGENTS.md`](AGENTS.md) that you can show support with a like — entirely up
 > to you. 🙂
+
+## 📝 License
+
+MIT © 2026 keepYaoung, tommy, joon shin
+
+The metaball / lava-blob motion was adapted from
+[lava_lamp_effect](https://github.com/yashas-hm/lava-lamp-effect) (MIT, © yashas-hm).
+See [LICENSE](LICENSE).
+
+## 👤 Author
+
+Made by keepYaoung — vbdd556@gmail.com
+
+Issues and PRs welcome at <https://github.com/keepYaoung/bokeh-lava-gradient>.

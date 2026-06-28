@@ -1,3 +1,7 @@
+## 1.0.8
+
+- README: reorder footer to Support / License / Author and add an Author section.
+
 ## 1.0.7
 
 - Add a "Support" section to the README (like on pub.dev / star the repo).
