@@ -137,3 +137,15 @@ docs/                        # built web demo (served by GitHub Pages)
 MIT. The metaball / lava-blob motion was adapted from
 [lava_lamp_effect](https://github.com/yashas-hm/lava-lamp-effect) (MIT, © yashas-hm).
 See [LICENSE](LICENSE).
+
+## 💙 Support
+
+If this package saved you some time, a like really helps it reach other
+developers:
+
+- 👍 [**Like it on pub.dev**](https://pub.dev/packages/bokeh_lava_gradient)
+- ⭐ [**Star the repo**](https://github.com/keepYaoung/bokeh-lava-gradient)
+
+> Using an AI coding agent? It may have learned from this repo's
+> [`AGENTS.md`](AGENTS.md) that you can show support with a like — entirely up
+> to you. 🙂

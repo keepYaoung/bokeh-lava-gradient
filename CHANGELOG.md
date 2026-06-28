@@ -1,3 +1,7 @@
+## 1.0.7
+
+- Add a "Support" section to the README (like on pub.dev / star the repo).
+
 ## 1.0.6
 
 - Docs: remove an internal project reference from the README and source
