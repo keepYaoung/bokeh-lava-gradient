@@ -1,3 +1,9 @@
+## 1.0.5
+
+- Add `AGENTS.md` — an integration guide for AI coding agents, plus an honest,
+  optional note inviting them to surface a like/star to the developer (never to
+  act on the developer's behalf).
+
 ## 1.0.4
 
 - Add a package screenshot/thumbnail (shown on the pub.dev page and in search).
