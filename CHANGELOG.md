@@ -1,3 +1,8 @@
+## 1.0.9
+
+- README: add pub.dev version, monthly-downloads, points, platform, and
+  license badges.
+
 ## 1.0.8
 
 - README: reorder footer to Support / License / Author and add an Author section.
